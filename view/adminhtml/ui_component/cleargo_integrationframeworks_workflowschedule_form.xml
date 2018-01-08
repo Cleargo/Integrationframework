@@ -1,0 +1,196 @@
+<?xml version="1.0" ?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+	<argument name="data" xsi:type="array">
+		<item name="js_config" xsi:type="array">
+			<item name="provider" xsi:type="string">cleargo_integrationframeworks_workflowschedule_form.workflowschedule_form_data_source</item>
+			<item name="deps" xsi:type="string">cleargo_integrationframeworks_workflowschedule_form.workflowschedule_form_data_source</item>
+		</item>
+		<item name="label" translate="true" xsi:type="string">General Information</item>
+		<item name="config" xsi:type="array">
+			<item name="dataScope" xsi:type="string">data</item>
+			<item name="namespace" xsi:type="string">cleargo_integrationframeworks_workflowschedule_form</item>
+		</item>
+		<item name="template" xsi:type="string">templates/form/collapsible</item>
+		<item name="buttons" xsi:type="array">
+			<item name="back" xsi:type="string">Cleargo\Integrationframeworks\Block\Adminhtml\WorkflowSchedule\Edit\BackButton</item>
+			<item name="delete" xsi:type="string">Cleargo\Integrationframeworks\Block\Adminhtml\WorkflowSchedule\Edit\DeleteButton</item>
+			<item name="save" xsi:type="string">Cleargo\Integrationframeworks\Block\Adminhtml\WorkflowSchedule\Edit\SaveButton</item>
+			<item name="save_and_continue" xsi:type="string">Cleargo\Integrationframeworks\Block\Adminhtml\WorkflowSchedule\Edit\SaveAndContinueButton</item>
+		</item>
+	</argument>
+	<dataSource name="workflowschedule_form_data_source">
+		<argument name="dataProvider" xsi:type="configurableObject">
+			<argument name="class" xsi:type="string">Cleargo\Integrationframeworks\Model\WorkflowSchedule\DataProvider</argument>
+			<argument name="name" xsi:type="string">workflowschedule_form_data_source</argument>
+			<argument name="primaryFieldName" xsi:type="string">workflowschedule_id</argument>
+			<argument name="requestFieldName" xsi:type="string">workflowschedule_id</argument>
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="submit_url" path="*/*/save" xsi:type="url"/>
+				</item>
+			</argument>
+		</argument>
+		<argument name="data" xsi:type="array">
+			<item name="js_config" xsi:type="array">
+				<item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+			</item>
+		</argument>
+	</dataSource>
+	<fieldset name="General">
+		<argument name="data" xsi:type="array">
+			<item name="config" xsi:type="array">
+				<item name="label" xsi:type="string"/>
+			</item>
+		</argument>
+		<field name="enable">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="dataType" xsi:type="string">text</item>
+					<item name="label" translate="true" xsi:type="string">enable</item>
+					<item name="formElement" xsi:type="string">input</item>
+					<item name="source" xsi:type="string">WorkflowSchedule</item>
+					<item name="sortOrder" xsi:type="number">20</item>
+					<item name="dataScope" xsi:type="string">enable</item>
+					<item name="validation" xsi:type="array">
+						<item name="required-entry" xsi:type="boolean">false</item>
+					</item>
+				</item>
+			</argument>
+		</field>
+		<field name="name">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="dataType" xsi:type="string">text</item>
+					<item name="label" translate="true" xsi:type="string">name</item>
+					<item name="formElement" xsi:type="string">input</item>
+					<item name="source" xsi:type="string">WorkflowSchedule</item>
+					<item name="sortOrder" xsi:type="number">30</item>
+					<item name="dataScope" xsi:type="string">name</item>
+					<item name="validation" xsi:type="array">
+						<item name="required-entry" xsi:type="boolean">false</item>
+					</item>
+				</item>
+			</argument>
+		</field>
+		<field name="website_id">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="dataType" xsi:type="string">text</item>
+					<item name="label" translate="true" xsi:type="string">website_id</item>
+					<item name="formElement" xsi:type="string">input</item>
+					<item name="source" xsi:type="string">WorkflowSchedule</item>
+					<item name="sortOrder" xsi:type="number">50</item>
+					<item name="dataScope" xsi:type="string">website_id</item>
+					<item name="validation" xsi:type="array">
+						<item name="required-entry" xsi:type="boolean">false</item>
+					</item>
+				</item>
+			</argument>
+		</field>
+		<field name="store_id">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="dataType" xsi:type="string">text</item>
+					<item name="label" translate="true" xsi:type="string">store_id</item>
+					<item name="formElement" xsi:type="string">input</item>
+					<item name="source" xsi:type="string">WorkflowSchedule</item>
+					<item name="sortOrder" xsi:type="number">60</item>
+					<item name="dataScope" xsi:type="string">store_id</item>
+					<item name="validation" xsi:type="array">
+						<item name="required-entry" xsi:type="boolean">false</item>
+					</item>
+				</item>
+			</argument>
+		</field>
+		<field name="notification_email">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="dataType" xsi:type="string">text</item>
+					<item name="label" translate="true" xsi:type="string">notification_email</item>
+					<item name="formElement" xsi:type="string">input</item>
+					<item name="source" xsi:type="string">WorkflowSchedule</item>
+					<item name="sortOrder" xsi:type="number">70</item>
+					<item name="dataScope" xsi:type="string">notification_email</item>
+					<item name="validation" xsi:type="array">
+						<item name="required-entry" xsi:type="boolean">false</item>
+					</item>
+				</item>
+			</argument>
+		</field>
+		<field name="execution_active_from">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="dataType" xsi:type="string">text</item>
+					<item name="label" translate="true" xsi:type="string">execution_active_from</item>
+					<item name="formElement" xsi:type="string">date</item>
+					<item name="source" xsi:type="string">WorkflowSchedule</item>
+					<item name="sortOrder" xsi:type="number">80</item>
+					<item name="dataScope" xsi:type="string">execution_active_from</item>
+					<item name="validation" xsi:type="array">
+						<item name="required-entry" xsi:type="boolean">false</item>
+					</item>
+				</item>
+			</argument>
+		</field>
+		<field name="execution_interval">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="dataType" xsi:type="string">text</item>
+					<item name="label" translate="true" xsi:type="string">execution_interval</item>
+					<item name="formElement" xsi:type="string">input</item>
+					<item name="source" xsi:type="string">WorkflowSchedule</item>
+					<item name="sortOrder" xsi:type="number">90</item>
+					<item name="dataScope" xsi:type="string">execution_interval</item>
+					<item name="validation" xsi:type="array">
+						<item name="required-entry" xsi:type="boolean">false</item>
+					</item>
+				</item>
+			</argument>
+		</field>
+		<field name="execution_type">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="dataType" xsi:type="string">text</item>
+					<item name="label" translate="true" xsi:type="string">execution_type</item>
+					<item name="formElement" xsi:type="string">input</item>
+					<item name="source" xsi:type="string">WorkflowSchedule</item>
+					<item name="sortOrder" xsi:type="number">100</item>
+					<item name="dataScope" xsi:type="string">execution_type</item>
+					<item name="validation" xsi:type="array">
+						<item name="required-entry" xsi:type="boolean">false</item>
+					</item>
+				</item>
+			</argument>
+		</field>
+		<field name="schedule_type">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="dataType" xsi:type="string">text</item>
+					<item name="label" translate="true" xsi:type="string">schedule_type</item>
+					<item name="formElement" xsi:type="string">input</item>
+					<item name="source" xsi:type="string">WorkflowSchedule</item>
+					<item name="sortOrder" xsi:type="number">120</item>
+					<item name="dataScope" xsi:type="string">schedule_type</item>
+					<item name="validation" xsi:type="array">
+						<item name="required-entry" xsi:type="boolean">false</item>
+					</item>
+				</item>
+			</argument>
+		</field>
+		<field name="sort_order">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="dataType" xsi:type="string">text</item>
+					<item name="label" translate="true" xsi:type="string">sort_order</item>
+					<item name="formElement" xsi:type="string">input</item>
+					<item name="source" xsi:type="string">WorkflowSchedule</item>
+					<item name="sortOrder" xsi:type="number">130</item>
+					<item name="dataScope" xsi:type="string">sort_order</item>
+					<item name="validation" xsi:type="array">
+						<item name="required-entry" xsi:type="boolean">false</item>
+					</item>
+				</item>
+			</argument>
+		</field>
+	</fieldset>
+</form>

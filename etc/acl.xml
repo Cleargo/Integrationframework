@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+	<acl>
+		<resources>
+			<resource id="Magento_Backend::admin">
+				<resource id="Cleargo_Integrationframeworks::WorkflowSchedule" sortOrder="10" title="WorkflowSchedule">
+					<resource id="Cleargo_Integrationframeworks::WorkflowSchedule_save" sortOrder="10" title="Save WorkflowSchedule"/>
+					<resource id="Cleargo_Integrationframeworks::WorkflowSchedule_delete" sortOrder="20" title="Delete WorkflowSchedule"/>
+					<resource id="Cleargo_Integrationframeworks::WorkflowSchedule_update" sortOrder="30" title="Update WorkflowSchedule"/>
+					<resource id="Cleargo_Integrationframeworks::WorkflowSchedule_view" sortOrder="40" title="View WorkflowSchedule"/>
+				</resource>
+				<resource id="Cleargo_Integrationframeworks::WorkflowComponentScheduleRelation" sortOrder="10" title="WorkflowComponentScheduleRelation">
+					<resource id="Cleargo_Integrationframeworks::WorkflowComponentScheduleRelation_save" sortOrder="10" title="Save WorkflowComponentScheduleRelation"/>
+					<resource id="Cleargo_Integrationframeworks::WorkflowComponentScheduleRelation_delete" sortOrder="20" title="Delete WorkflowComponentScheduleRelation"/>
+					<resource id="Cleargo_Integrationframeworks::WorkflowComponentScheduleRelation_update" sortOrder="30" title="Update WorkflowComponentScheduleRelation"/>
+					<resource id="Cleargo_Integrationframeworks::WorkflowComponentScheduleRelation_view" sortOrder="40" title="View WorkflowComponentScheduleRelation"/>
+				</resource>
+				<resource id="Cleargo_Integrationframeworks::WorkflowComponentDefinition" sortOrder="10" title="WorkflowComponentDefinition">
+					<resource id="Cleargo_Integrationframeworks::WorkflowComponentDefinition_save" sortOrder="10" title="Save WorkflowComponentDefinition"/>
+					<resource id="Cleargo_Integrationframeworks::WorkflowComponentDefinition_delete" sortOrder="20" title="Delete WorkflowComponentDefinition"/>
+					<resource id="Cleargo_Integrationframeworks::WorkflowComponentDefinition_update" sortOrder="30" title="Update WorkflowComponentDefinition"/>
+					<resource id="Cleargo_Integrationframeworks::WorkflowComponentDefinition_view" sortOrder="40" title="View WorkflowComponentDefinition"/>
+				</resource>
+				<resource id="Cleargo_Integrationframeworks::WorkflowComponentDefinitionParameters" sortOrder="10" title="WorkflowComponentDefinitionParameters">
+					<resource id="Cleargo_Integrationframeworks::WorkflowComponentDefinitionParameters_save" sortOrder="10" title="Save WorkflowComponentDefinitionParameters"/>
+					<resource id="Cleargo_Integrationframeworks::WorkflowComponentDefinitionParameters_delete" sortOrder="20" title="Delete WorkflowComponentDefinitionParameters"/>
+					<resource id="Cleargo_Integrationframeworks::WorkflowComponentDefinitionParameters_update" sortOrder="30" title="Update WorkflowComponentDefinitionParameters"/>
+					<resource id="Cleargo_Integrationframeworks::WorkflowComponentDefinitionParameters_view" sortOrder="40" title="View WorkflowComponentDefinitionParameters"/>
+				</resource>
+				<resource id="Cleargo_Integrationframeworks::WorkflowPlans" sortOrder="10" title="WorkflowPlans">
+					<resource id="Cleargo_Integrationframeworks::WorkflowPlans_save" sortOrder="10" title="Save WorkflowPlans"/>
+					<resource id="Cleargo_Integrationframeworks::WorkflowPlans_delete" sortOrder="20" title="Delete WorkflowPlans"/>
+					<resource id="Cleargo_Integrationframeworks::WorkflowPlans_update" sortOrder="30" title="Update WorkflowPlans"/>
+					<resource id="Cleargo_Integrationframeworks::WorkflowPlans_view" sortOrder="40" title="View WorkflowPlans"/>
+				</resource>
+			</resource>
+		</resources>
+	</acl>
+</config>

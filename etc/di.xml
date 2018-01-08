@@ -1,0 +1,54 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+	<preference for="Cleargo\Integrationframeworks\Api\WorkflowScheduleRepositoryInterface" type="Cleargo\Integrationframeworks\Model\WorkflowScheduleRepository"/>
+	<preference for="Cleargo\Integrationframeworks\Api\Data\WorkflowScheduleInterface" type="Cleargo\Integrationframeworks\Model\WorkflowSchedule"/>
+	<preference for="Cleargo\Integrationframeworks\Api\Data\WorkflowScheduleSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+	<virtualType name="Cleargo\Integrationframeworks\Model\ResourceModel\WorkflowSchedule\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+		<arguments>
+			<argument name="mainTable" xsi:type="string">workflow_schedule</argument>
+			<argument name="resourceModel" xsi:type="string">Cleargo\Integrationframeworks\Model\ResourceModel\WorkflowSchedule\Collection</argument>
+		</arguments>
+	</virtualType>
+	<type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+		<arguments>
+			<argument name="collections" xsi:type="array">
+				<item name="cleargo_integrationframeworks_workflowschedule_grid_data_source" xsi:type="string">Cleargo\Integrationframeworks\Model\ResourceModel\WorkflowSchedule\Grid\Collection</item>
+				<item name="cleargo_integrationframeworks_workflowcomponentschedulerelation_grid_data_source" xsi:type="string">Cleargo\Integrationframeworks\Model\ResourceModel\WorkflowComponentScheduleRelation\Grid\Collection</item>
+				<item name="cleargo_integrationframeworks_workflowcomponentdefinition_grid_data_source" xsi:type="string">Cleargo\Integrationframeworks\Model\ResourceModel\WorkflowComponentDefinition\Grid\Collection</item>
+				<item name="cleargo_integrationframeworks_workflowcomponentdefinitionparameters_grid_data_source" xsi:type="string">Cleargo\Integrationframeworks\Model\ResourceModel\WorkflowComponentDefinitionParameters\Grid\Collection</item>
+				<item name="cleargo_integrationframeworks_workflowplans_grid_data_source" xsi:type="string">Cleargo\Integrationframeworks\Model\ResourceModel\WorkflowPlans\Grid\Collection</item>
+			</argument>
+		</arguments>
+	</type>
+	<virtualType name="Cleargo\Integrationframeworks\Model\ResourceModel\WorkflowComponentScheduleRelation\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+		<arguments>
+			<argument name="mainTable" xsi:type="string">workflow_component_schedule_relation</argument>
+			<argument name="resourceModel" xsi:type="string">Cleargo\Integrationframeworks\Model\ResourceModel\WorkflowComponentScheduleRelation\Collection</argument>
+		</arguments>
+	</virtualType>
+	<virtualType name="Cleargo\Integrationframeworks\Model\ResourceModel\WorkflowComponentDefinition\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+		<arguments>
+			<argument name="mainTable" xsi:type="string">workflow_component_definition</argument>
+			<argument name="resourceModel" xsi:type="string">Cleargo\Integrationframeworks\Model\ResourceModel\WorkflowComponentDefinition\Collection</argument>
+		</arguments>
+	</virtualType>
+	<virtualType name="Cleargo\Integrationframeworks\Model\ResourceModel\WorkflowComponentDefinitionParameters\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+		<arguments>
+			<argument name="mainTable" xsi:type="string">workflow_component_definition_parameters</argument>
+			<argument name="resourceModel" xsi:type="string">Cleargo\Integrationframeworks\Model\ResourceModel\WorkflowComponentDefinitionParameters\Collection</argument>
+		</arguments>
+	</virtualType>
+	<virtualType name="Cleargo\Integrationframeworks\Model\ResourceModel\WorkflowPlans\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+		<arguments>
+			<argument name="mainTable" xsi:type="string">workflow_plans</argument>
+			<argument name="resourceModel" xsi:type="string">Cleargo\Integrationframeworks\Model\ResourceModel\WorkflowPlans\Collection</argument>
+		</arguments>
+	</virtualType>
+	<type name="Magento\Framework\Console\CommandList">
+		<arguments>
+			<argument name="commands" xsi:type="array">
+				<item name="TestIntegration" xsi:type="object">Cleargo\Integrationframeworks\Console\Command\TestIntegration</item>
+			</argument>
+		</arguments>
+	</type>
+</config>

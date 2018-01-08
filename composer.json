@@ -1,0 +1,25 @@
+{
+    "name": "cleargo/module-integrationframeworks",
+    "description": "",
+    "license": "proprietary",
+    "authors": [
+        {
+            "email": "info@mage2gen.com",
+            "name": "Mage2Gen"
+        },
+        {
+            "email": "leo@cleargo.com",
+            "name": "Leo Leung"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Cleargo\\Integrationframeworks\\": ""
+        },
+        "files": [
+            "registration.php"
+        ]
+    }
+}
