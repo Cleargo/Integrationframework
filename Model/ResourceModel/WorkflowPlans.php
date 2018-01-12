@@ -13,6 +13,6 @@ class WorkflowPlans extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
      */
     protected function _construct()
     {
-        $this->_init('cleargo_integrationframeworks_workflowplans', 'workflowplans_id');
+        $this->_init('workflow_plans', 'workflowplans_id');
     }
 }

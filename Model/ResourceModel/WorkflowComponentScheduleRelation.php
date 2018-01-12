@@ -13,6 +13,6 @@ class WorkflowComponentScheduleRelation extends \Magento\Framework\Model\Resourc
      */
     protected function _construct()
     {
-        $this->_init('cleargo_integrationframeworks_workflowcomponentschedulerelation', 'workflowcomponentschedulerelation_id');
+        $this->_init('workflow_component_schedule_relation', 'workflowcomponentschedulerelation_id');
     }
 }

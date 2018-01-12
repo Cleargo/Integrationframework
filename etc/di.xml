@@ -48,6 +48,7 @@
 		<arguments>
 			<argument name="commands" xsi:type="array">
 				<item name="TestIntegration" xsi:type="object">Cleargo\Integrationframeworks\Console\Command\TestIntegration</item>
+				<item name="TestExecuteSchedule" xsi:type="object">Cleargo\Integrationframeworks\Console\Command\TestExecuteSchedule</item>
 			</argument>
 		</arguments>
 	</type>

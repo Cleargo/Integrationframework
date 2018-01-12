@@ -13,6 +13,6 @@ class WorkflowComponentDefinitionParameters extends \Magento\Framework\Model\Res
      */
     protected function _construct()
     {
-        $this->_init('cleargo_integrationframeworks_workflowcomponentdefinitionparameters', 'workflowcomponentdefinitionparameters_id');
+        $this->_init('workflow_component_definition_parameters', 'workflowcomponentdefinitionparameters_id');
     }
 }

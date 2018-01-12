@@ -20,14 +20,14 @@ class InstallSchema implements InstallSchemaInterface
         $installer = $setup;
         $installer->startSetup();
 
-        $table_cleargo_integrationframeworks_workflowschedule = $setup->getConnection()->newTable($setup->getTable('cleargo_integrationframeworks_workflowschedule'));
+        $table_cleargo_integrationframeworks_workflowschedule = $setup->getConnection()->newTable($setup->getTable('workflow_schedule'));
 
         
         $table_cleargo_integrationframeworks_workflowschedule->addColumn(
             'workflowschedule_id',
             \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
             null,
-            array('identity' => true,'nullable' => false,'primary' => true,'unsigned' => true,'auto_increment' => true),
+            array('identity' => true,'nullable' => false,'primary' => true,'auto_increment' => true),
             'Entity ID'
         );
         
@@ -154,80 +154,20 @@ class InstallSchema implements InstallSchemaInterface
         );
         
 
-        $table_cleargo_integrationframeworks_workflowcomponentschedulerelation = $setup->getConnection()->newTable($setup->getTable('cleargo_integrationframeworks_workflowcomponentschedulerelation'));
-
-        
-        $table_cleargo_integrationframeworks_workflowcomponentschedulerelation->addColumn(
-            'workflowcomponentschedulerelation_id',
-            \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
-            null,
-            array('identity' => true,'nullable' => false,'primary' => true,'unsigned' => true,'auto_increment' => true),
-            'Entity ID'
-        );
-        
 
 
-        
-        $table_cleargo_integrationframeworks_workflowcomponentschedulerelation->addColumn(
-            'schedule_id',
-            \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
-            null,
-            [],
-            'forieign key'
-        );
-        
 
-        
-        $table_cleargo_integrationframeworks_workflowcomponentschedulerelation->addColumn(
-            'asynchron',
-            \Magento\Framework\DB\Ddl\Table::TYPE_BOOLEAN,
-            null,
-            [],
-            'asynchron'
-        );
-        
-
-        
-        $table_cleargo_integrationframeworks_workflowcomponentschedulerelation->addColumn(
-            'component_id',
-            \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
-            null,
-            [],
-            'foreign key'
-        );
-        
-
-        
-        $table_cleargo_integrationframeworks_workflowcomponentschedulerelation->addColumn(
-            'position',
-            \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
-            null,
-            [],
-            'position'
-        );
-        
-
-        
-        $table_cleargo_integrationframeworks_workflowcomponentschedulerelation->addColumn(
-            'parameters',
-            \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-            null,
-            [],
-            'parameters'
-        );
-        
-
-        $table_cleargo_integrationframeworks_workflowcomponentdefinition = $setup->getConnection()->newTable($setup->getTable('cleargo_integrationframeworks_workflowcomponentdefinition'));
+        $table_cleargo_integrationframeworks_workflowcomponentdefinition = $setup->getConnection()->newTable($setup->getTable('workflow_component_definition'));
 
         
         $table_cleargo_integrationframeworks_workflowcomponentdefinition->addColumn(
             'workflowcomponentdefinition_id',
             \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
             null,
-            array('identity' => true,'nullable' => false,'primary' => true,'unsigned' => true,'auto_increment' => true),
+            array('identity' => true,'nullable' => false,'primary' => true,'auto_increment' => true),
             'Entity ID'
         );
-        
+
 
 
 
@@ -259,16 +199,21 @@ class InstallSchema implements InstallSchemaInterface
             [],
             'description'
         );
-        
 
-        $table_cleargo_integrationframeworks_workflowcomponentdefinitionparameters = $setup->getConnection()->newTable($setup->getTable('cleargo_integrationframeworks_workflowcomponentdefinitionparameters'));
+        $table_cleargo_integrationframeworks_workflowcomponentdefinition->addIndex(
+            $installer->getIdxName('workflow_component_definition', ['type']),
+            ['type']
+        );
+
+
+        $table_cleargo_integrationframeworks_workflowcomponentdefinitionparameters = $setup->getConnection()->newTable($setup->getTable('workflow_component_definition_parameters'));
 
         
         $table_cleargo_integrationframeworks_workflowcomponentdefinitionparameters->addColumn(
             'workflowcomponentdefinitionparameters_id',
             \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
             null,
-            array('identity' => true,'nullable' => false,'primary' => true,'unsigned' => true,'auto_increment' => true),
+            array('identity' => true,'nullable' => false,'primary' => true,'auto_increment' => true),
             'Entity ID'
         );
         
@@ -324,16 +269,35 @@ class InstallSchema implements InstallSchemaInterface
             [],
             'enum_values'
         );
-        
 
-        $table_cleargo_integrationframeworks_workflowplans = $setup->getConnection()->newTable($setup->getTable('cleargo_integrationframeworks_workflowplans'));
+        $table_cleargo_integrationframeworks_workflowcomponentdefinitionparameters->addIndex(
+            $installer->getIdxName('workflow_component_definition_parameters', ['component_id']),
+            ['component_id']
+        );
+
+        $table_cleargo_integrationframeworks_workflowcomponentdefinitionparameters->addIndex(
+            $installer->getIdxName('workflow_component_definition_parameters', ['type']),
+            ['type']
+        );
+
+        $table_cleargo_integrationframeworks_workflowcomponentdefinitionparameters->addForeignKey(
+            $installer->getFkName('workflow_component_definition_parameters', 'component_id', 'workflow_component_definition', 'workflowcomponentdefinition_id'),
+            'component_id',
+            $installer->getTable('workflow_component_definition'),
+            'workflowcomponentdefinition_id',
+            \Magento\Framework\DB\Ddl\Table::ACTION_CASCADE
+        );
+
+
+
+        $table_cleargo_integrationframeworks_workflowplans = $setup->getConnection()->newTable($setup->getTable('workflow_plans'));
 
         
         $table_cleargo_integrationframeworks_workflowplans->addColumn(
             'workflowplans_id',
             \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
             null,
-            array('identity' => true,'nullable' => false,'primary' => true,'unsigned' => true,'auto_increment' => true),
+            array('identity' => true,'nullable' => false,'primary' => true,'auto_increment' => true),
             'Entity ID'
         );
         
@@ -437,7 +401,120 @@ class InstallSchema implements InstallSchemaInterface
             [],
             'message'
         );
-        
+
+        $table_cleargo_integrationframeworks_workflowplans->addIndex(
+            $installer->getIdxName('workflow_plans', ['schedule_id']),
+            ['schedule_id']
+        );
+
+        $table_cleargo_integrationframeworks_workflowplans->addIndex(
+            $installer->getIdxName('workflow_plans', ['relation_id']),
+            ['relation_id']
+        );
+
+        $table_cleargo_integrationframeworks_workflowplans->addForeignKey(
+            $installer->getFkName('workflow_plans', 'schedule_id', 'workflow_schedule', 'workflowschedule_id'),
+            'schedule_id',
+            $installer->getTable('workflow_schedule'),
+            'workflowschedule_id',
+            \Magento\Framework\DB\Ddl\Table::ACTION_CASCADE
+        );
+        $table_cleargo_integrationframeworks_workflowplans->addForeignKey(
+            $installer->getFkName('workflow_plans', 'relation_id', 'workflow_component_schedule_relation', 'workflowcomponentschedulerelation_id'),
+            'relation_id',
+            $installer->getTable('workflow_component_schedule_relation'),
+            'workflowcomponentschedulerelation_id',
+            \Magento\Framework\DB\Ddl\Table::ACTION_CASCADE
+        );
+
+
+        $table_cleargo_integrationframeworks_workflowcomponentschedulerelation = $setup->getConnection()->newTable($setup->getTable('workflow_component_schedule_relation'));
+
+
+        $table_cleargo_integrationframeworks_workflowcomponentschedulerelation->addColumn(
+            'workflowcomponentschedulerelation_id',
+            \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+            null,
+            array('identity' => true,'nullable' => false,'primary' => true,'auto_increment' => true),
+            'Entity ID'
+        );
+
+
+
+
+        $table_cleargo_integrationframeworks_workflowcomponentschedulerelation->addColumn(
+            'schedule_id',
+            \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+            null,
+            [],
+            'forieign key'
+        );
+
+
+
+        $table_cleargo_integrationframeworks_workflowcomponentschedulerelation->addColumn(
+            'asynchron',
+            \Magento\Framework\DB\Ddl\Table::TYPE_BOOLEAN,
+            null,
+            [],
+            'asynchron'
+        );
+
+
+
+        $table_cleargo_integrationframeworks_workflowcomponentschedulerelation->addColumn(
+            'component_id',
+            \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+            null,
+            [],
+            'foreign key'
+        );
+
+
+
+        $table_cleargo_integrationframeworks_workflowcomponentschedulerelation->addColumn(
+            'position',
+            \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+            null,
+            [],
+            'position'
+        );
+
+
+
+        $table_cleargo_integrationframeworks_workflowcomponentschedulerelation->addColumn(
+            'parameters',
+            \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+            null,
+            [],
+            'parameters'
+        );
+
+        $table_cleargo_integrationframeworks_workflowcomponentschedulerelation->addIndex(
+            $installer->getIdxName('workflow_component_schedule_relation', ['schedule_id']),
+            ['schedule_id']
+        );
+        $table_cleargo_integrationframeworks_workflowcomponentschedulerelation->addIndex(
+            $installer->getIdxName('workflow_component_schedule_relation', ['component_id']),
+            ['component_id']
+        );
+
+        $table_cleargo_integrationframeworks_workflowcomponentschedulerelation->addForeignKey(
+            $installer->getFkName('workflow_component_schedule_relation', 'schedule_id', 'workflow_schedule', 'workflowschedule_id'),
+            'schedule_id',
+            $installer->getTable('workflow_schedule'),
+            'workflowschedule_id',
+            \Magento\Framework\DB\Ddl\Table::ACTION_CASCADE
+        );
+
+        $table_cleargo_integrationframeworks_workflowcomponentschedulerelation->addForeignKey(
+            $installer->getFkName('workflow_component_schedule_relation', 'component_id', 'workflow_component_definition', 'workflowcomponentdefinition_id'),
+            'schedule_id',
+            $installer->getTable('workflow_component_definition'),
+            'workflowcomponentdefinition_id',
+            \Magento\Framework\DB\Ddl\Table::ACTION_CASCADE
+        );
+
 
         $setup->getConnection()->createTable($table_cleargo_integrationframeworks_workflowplans);
 

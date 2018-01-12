@@ -13,6 +13,6 @@ class WorkflowComponentDefinition extends \Magento\Framework\Model\ResourceModel
      */
     protected function _construct()
     {
-        $this->_init('cleargo_integrationframeworks_workflowcomponentdefinition', 'workflowcomponentdefinition_id');
+        $this->_init('workflow_component_definition', 'workflowcomponentdefinition_id');
     }
 }

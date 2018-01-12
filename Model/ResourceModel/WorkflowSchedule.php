@@ -13,6 +13,6 @@ class WorkflowSchedule extends \Magento\Framework\Model\ResourceModel\Db\Abstrac
      */
     protected function _construct()
     {
-        $this->_init('cleargo_integrationframeworks_workflowschedule', 'workflowschedule_id');
+        $this->_init('workflow_schedule', 'workflowschedule_id');
     }
 }
