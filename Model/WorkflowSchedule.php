@@ -281,4 +281,12 @@ class WorkflowSchedule extends \Magento\Framework\Model\AbstractModel implements
     {
         return $this->setData(self::SORT_ORDER, $sort_order);
     }
+
+
+    public function loadRelation(){
+
+        $this->_getResource()->loadRelation($this);
+
+        return $this;
+    }
 }

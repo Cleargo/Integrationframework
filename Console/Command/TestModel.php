@@ -44,16 +44,23 @@ class TestModel extends Command
         $option = $input->getOption(self::NAME_OPTION);
         $output->writeln("Test Model " . $name);
 
+        /*
         $testModel = $this->getObjectManager()->create('Cleargo\Integrationframeworks\Model\WorkflowComponentDefinition');
-        $testModel->load(3);
-        //\Zend_Debug::dump($testModel->getData());
+        $testModel->load(1);
+         \Zend_Debug::dump($testModel->getData());
+        var_dump("---------------------- end of model -------------------- ");
         $testCollection = $this->getObjectManager()->create('Cleargo\Integrationframeworks\Model\ResourceModel\WorkflowComponentDefinition\Collection');
         $testCollection->addFieldToFilter("workflowcomponentdefinition_id",array("in"=>array(1,3)));
         if (count($testCollection)){
             foreach ($testCollection as $c){
                 \Zend_Debug::dump($c->getData());
             }
-        }
+        }*/
+
+        $testModel = $this->getObjectManager()->create('Cleargo\Integrationframeworks\Model\WorkflowSchedule');
+        $testModel->load(1)->loadRelation();
+
+        \Zend_Debug::dump($testModel->getData());
 
 
 
