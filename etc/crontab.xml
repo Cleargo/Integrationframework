@@ -1,11 +1,11 @@
 <?xml version="1.0" ?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
 	<group id="default">
-		<job instance="Cleargo\Integrationframeworks\Cron\RunWorkflow" method="generatePlan" name="cleargo_integrationframeworks_runworkflow:generatePlan">
-			<schedule>*/5 * * * *</schedule>
-		</job>
+		<!--<job instance="Cleargo\Integrationframeworks\Cron\RunWorkflow" method="generatePlan" name="cleargo_integrationframeworks_runworkflow:generatePlan">
+			<schedule>0 0 * * *</schedule>
+		</job>-->
 		<job instance="Cleargo\Integrationframeworks\Cron\RunWorkflow" method="executePlan" name="cleargo_integrationframeworks_runworkflow:executePlan">
-			<schedule>*/5 * * * *</schedule>
+			<schedule>0 0 * * *</schedule>
 		</job>
 	</group>
 </config>
