@@ -45,12 +45,14 @@ class ExportOrder
     }
 
     public function execute() {
+        var_dump('Export Order Start');
+
         // TODO: Export Order xml
         $this->exportOrderXml();
 
         // TODO: Update last_sync for Order
 
-        var_dump('ExportOrder executed');
+        var_dump('Export Order Executed');
     }
 
     public function exportOrderXml() {
@@ -63,17 +65,20 @@ class ExportOrder
 
         // TODO: Export Order Xml
         foreach ($this->orderCollection as $order) {
-            $currentTime = date("Ymd_HisS", time());
-            $fileName = 'order_export_' . $order->getIncrementId() . '_' . $currentTime . '.xml';
+            $currentTime = time();
+            $fileTime = date("Ymd_HisS", $currentTime);
+            $fileName = 'order_export_' . $order->getIncrementId() . '_' . $fileTime . '.xml';
             //var_dump($fileName);
 
-            $content =  $order->toXml();
+            $content =  $order->toXml([], null, null, false);
 
             // TODO: generate xml for each order
             $outputFile = fopen($outputDir . $fileName, "w");
             try {
                 fwrite($outputFile, $content);
                 fclose($outputFile);
+                $order->setNavLastSyncAt(date("Y-m-d H:i:s", $currentTime));
+                $order->getResource()->saveAttribute($order, 'nav_last_sync_at');
             } catch (Exception $e) {
                 $this->logger->addDebug($e->getMessage());
             }
