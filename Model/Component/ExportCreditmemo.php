@@ -65,12 +65,15 @@ class ExportCreditmemo
             $fileName = 'creditmemo_export_' . $creditmemo->getIncrementId() . '_' . $fileTime . '.xml';
             //var_dump($fileName);
 
-            $content =  $creditmemo->toXml([], null, null, false);
+            $content = "<response>&#xA;";
+            $content .=  $creditmemo->toXml([], null, null, false);
+            $content .= "</response>";
+            $xml = new \SimpleXMLElement($content);
 
             // TODO: generate xml for each order
             $outputFile = fopen($outputDir . $fileName, "w");
             try {
-                fwrite($outputFile, $content);
+                fwrite($outputFile, $xml->asXML());
                 fclose($outputFile);
                 $creditmemo->setNavLastSyncAt(date("Y-m-d H:i:s", $currentTime));
                 $creditmemo->getResource()->saveAttribute($creditmemo, 'nav_last_sync_at');

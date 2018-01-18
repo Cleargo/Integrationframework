@@ -70,12 +70,15 @@ class ExportOrder
             $fileName = 'order_export_' . $order->getIncrementId() . '_' . $fileTime . '.xml';
             //var_dump($fileName);
 
-            $content =  $order->toXml([], null, null, false);
+            $content = "<response>&#xA;";
+            $content .=  $order->toXml([], null, null, false);
+            $content .= "</response>";
+            $xml = new \SimpleXMLElement($content);
 
             // TODO: generate xml for each order
             $outputFile = fopen($outputDir . $fileName, "w");
             try {
-                fwrite($outputFile, $content);
+                fwrite($outputFile, $xml->asXML());
                 fclose($outputFile);
                 $order->setNavLastSyncAt(date("Y-m-d H:i:s", $currentTime));
                 $order->getResource()->saveAttribute($order, 'nav_last_sync_at');
