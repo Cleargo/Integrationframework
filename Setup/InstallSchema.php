@@ -509,7 +509,7 @@ class InstallSchema implements InstallSchemaInterface
 
         $table_cleargo_integrationframeworks_workflowcomponentschedulerelation->addForeignKey(
             $installer->getFkName('workflow_component_schedule_relation', 'component_id', 'workflow_component_definition', 'workflowcomponentdefinition_id'),
-            'schedule_id',
+            'component_id',
             $installer->getTable('workflow_component_definition'),
             'workflowcomponentdefinition_id',
             \Magento\Framework\DB\Ddl\Table::ACTION_CASCADE
