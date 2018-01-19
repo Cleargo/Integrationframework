@@ -63,6 +63,8 @@ class ExportOrder
         // TODO: Get Order Collection
         $this->orderCollection = $this->getOrderCollection($orderStatus);
 
+        var_dump('Colleciton count: ' . $this->orderCollection->count());
+
         // TODO: Export Order Xml
         foreach ($this->orderCollection as $order) {
             $currentTime = time();

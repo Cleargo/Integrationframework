@@ -130,12 +130,13 @@ class RunWorkflow
 
         // Each plan should have only one pending record normally
         foreach ($workflowPlansCollection as $plan) {
+            var_dump("Workflow plan(id: ". $plan->getId() .") START");
             // TODO: Load schedule by schedule_id and take the relation & component data
             $scheduleId = $plan->getScheduleId();
             $websiteId = $plan->getWebsiteId();
             $storeId = $plan->getStoreId();
             $workflowSchedule = $this->workflowScheduleFactory->create()->load($scheduleId)->loadRelation();
-            echo $workflowSchedule->getSelect();
+            //echo $workflowSchedule->getSelect();
             $relations = $workflowSchedule->getRelation();
             foreach ($relations as $rel) {
                 $components = $rel['component'];
@@ -144,7 +145,7 @@ class RunWorkflow
                     // TODO: get the component name from relation and load the corresponding model. For example, ExportOrder
                     $compName = $comp['name'];
                     $modelName = "Cleargo\\Integrationframeworks\\Model\\Component\\" . $compName;
-                    var_dump($modelName);
+                    //var_dump($modelName);
 
                     // TODO: run execute method in component model, will create interface for component later
                     // TODO: Relation to Component is 1 to 1 ??
@@ -158,7 +159,7 @@ class RunWorkflow
                     //var_dump($comp);
                 }
             }
-
+            var_dump("Workflow plan(id: ". $plan->getId() .") END");
         }
     }
 }

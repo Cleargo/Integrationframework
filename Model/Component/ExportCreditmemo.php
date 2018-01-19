@@ -37,9 +37,9 @@ class ExportCreditmemo
         var_dump('Export Creditmemo Start');
 
         // TODO: Export Order xml
-        var_dump($this->relationParams);
+        /*var_dump($this->relationParams);
         var_dump($this->websiteId);
-        var_dump($this->storeId);
+        var_dump($this->storeId);*/
         $this->exportCreditmemoXml();
 
 
