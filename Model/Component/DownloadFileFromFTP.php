@@ -3,7 +3,7 @@ namespace Cleargo\Integrationframeworks\Model\Component;
 /**
  * Extended FTP client
  */
-class UploadFileToFTP extends \Cleargo\Integrationframeworks\Model\Component\AbstractComponent\Ftp
+class DownloadFileFromFTP extends \Cleargo\Integrationframeworks\Model\Component\AbstractComponent\Ftp
 {
     protected $logger;
 
@@ -16,13 +16,13 @@ class UploadFileToFTP extends \Cleargo\Integrationframeworks\Model\Component\Abs
     protected $scheduleLogLevel;
 
     public function execute() {
-        var_dump('UploadFileToFTP Start');
-        $this->upload();
-        var_dump('UploadFileToFTP Executed');
+        var_dump('DownloadFileFromFTP Start');
+        $this->download();
+        var_dump('DownloadFileFromFTP Executed');
     }
 
-    public function upload(){
-        echo 'UPLOAD!!';
+    public function download(){
+        echo 'DownloadFileFromFTP!!';
         echo $this->setConnection("host=xxxx");
         return true;
     }
