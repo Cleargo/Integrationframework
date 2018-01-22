@@ -6,6 +6,7 @@ namespace Cleargo\Integrationframeworks\Cron;
 use Cleargo\Integrationframeworks\Model\WorkflowScheduleFactory;
 use Cleargo\Integrationframeworks\Model\WorkflowComponentScheduleRelationFactory;
 use Cleargo\Integrationframeworks\Model\WorkflowPlansFactory;
+use Cleargo\Integrationframeworks\Logger\Logger;
 
 class RunWorkflow
 {
@@ -26,7 +27,7 @@ class RunWorkflow
      *
      * @param \Psr\Log\LoggerInterface $logger
      */
-    public function __construct(\Psr\Log\LoggerInterface $logger, \Magento\Framework\ObjectManagerInterface $objectManager, WorkflowScheduleFactory $workflowScheduleFactory,
+    public function __construct(Logger $logger, \Magento\Framework\ObjectManagerInterface $objectManager, WorkflowScheduleFactory $workflowScheduleFactory,
                                 WorkflowComponentScheduleRelationFactory $workflowComponentScheduleRelationFactory,
                                 WorkflowPlansFactory $workflowPlansFactory)
     {
@@ -115,7 +116,8 @@ class RunWorkflow
     public function executePlan()
     {
         // TODO: directly run core method
-        $this->logger->addDebug("---------- executePlan in RunWorkflow ----------");
+        $this->logger->info("------------------------------ executePlan in RunWorkflow START ------------------------------");
+        var_dump("---------- executePlan in RunWorkflow ----------");
 
         // TODO: loop plan for execution, check start_time and status to determine which plan to run
         $currentTime = date("Y-m-d H:i:s", time());
@@ -130,7 +132,8 @@ class RunWorkflow
 
         // Each plan should have only one pending record normally
         foreach ($workflowPlansCollection as $plan) {
-            var_dump("Workflow plan(id: ". $plan->getId() .") START");
+            var_dump("RunWorkflow: Workflow plan(id: ". $plan->getId() .") START");
+            $this->logger->info("----------RunWorkflow: Workflow plan(id: ". $plan->getId() .") executed----------");
             // TODO: Load schedule by schedule_id and take the relation & component data
             $scheduleId = $plan->getScheduleId();
             $websiteId = $plan->getWebsiteId();
@@ -157,11 +160,14 @@ class RunWorkflow
                         ->setScheduleLogLevel($scheduleLogLevel);
                     // Relation to Component is 1 to 1 ???
 
+                    $this->logger->info("RunWorkflow: Component(".$compName.") executed");
                     $compModel->execute();
                     //var_dump($comp);
                 }
             }
-            var_dump("Workflow plan(id: ". $plan->getId() .") END");
+            var_dump("RunWorkflow: Workflow plan(id: ". $plan->getId() .") END");
+            $this->logger->info("----------RunWorkflow: Workflow plan(id: ". $plan->getId() .") completed----------");
         }
+        $this->logger->info("------------------------------ executePlan in RunWorkflow END ------------------------------");
     }
 }

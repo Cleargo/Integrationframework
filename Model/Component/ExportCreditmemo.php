@@ -2,7 +2,7 @@
 
 namespace Cleargo\Integrationframeworks\Model\Component;
 
-use Psr\Log\LoggerInterface;
+use Cleargo\Integrationframeworks\Logger\Logger;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\FilterBuilder;
@@ -28,7 +28,7 @@ class ExportCreditmemo
     protected $creditmemoModel;
 
 
-    public function __construct(LoggerInterface $logger, DirectoryList $directoryList, Creditmemo $creditmemoModel)
+    public function __construct(Logger $logger, DirectoryList $directoryList, Creditmemo $creditmemoModel)
     {
         $this->logger = $logger;
         $this->directoryList = $directoryList;
@@ -58,7 +58,11 @@ class ExportCreditmemo
         // TODO: Get Order Collection
         $this->creditmemoCollection = $this->getCreditmemoCollection();
 
-        var_dump('Colleciton count: ' . $this->creditmemoCollection->count());
+        if (!$this->creditmemoCollection->count()) {
+            $this->logger->info("ExportCreditmemo: There are no Creditmemo for export");
+        } else {
+            $this->logger->info("ExportCreditmemo: " . $this->creditmemoCollection->count() . " creditmemo(s) processed");
+        }
 
         // TODO: Export Order Xml
         foreach ($this->creditmemoCollection as $creditmemo) {
@@ -79,6 +83,7 @@ class ExportCreditmemo
                 fclose($outputFile);
                 $creditmemo->setNavLastSyncAt(date("Y-m-d H:i:s", $currentTime));
                 $creditmemo->getResource()->saveAttribute($creditmemo, 'nav_last_sync_at');
+                $this->logger->info("ExportCreditmemo: " . $fileName . " created");
             } catch (Exception $e) {
                 $this->logger->addDebug($e->getMessage());
             }

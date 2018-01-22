@@ -2,7 +2,7 @@
 
 namespace Cleargo\Integrationframeworks\Model\Component;
 
-use Psr\Log\LoggerInterface;
+use Cleargo\Integrationframeworks\Logger\Logger;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\FilterBuilder;
@@ -34,7 +34,7 @@ class ExportOrder
     protected $orderFactory;
 
 
-    public function __construct(LoggerInterface $logger, OrderRepositoryInterface $orderRepository,
+    public function __construct(Logger $logger, OrderRepositoryInterface $orderRepository,
                                 SearchCriteriaBuilder $searchCriteriaBuilder, FilterBuilder $filterBuilder,
                                 DirectoryList $directoryList, OrderFactory $orderFactory)
     {
@@ -65,7 +65,11 @@ class ExportOrder
         // TODO: Get Order Collection
         $this->orderCollection = $this->getOrderCollection($orderStatus);
 
-        var_dump('Colleciton count: ' . $this->orderCollection->count());
+        if (!$this->orderCollection->count()) {
+            $this->logger->info("ExportOrder: There are no Order for export");
+        } else {
+            $this->logger->info("ExportOrder: " . $this->orderCollection->count() . " order(s) processed");
+        }
 
         // TODO: Export Order Xml
         foreach ($this->orderCollection as $order) {
@@ -86,6 +90,7 @@ class ExportOrder
                 fclose($outputFile);
                 $order->setNavLastSyncAt(date("Y-m-d H:i:s", $currentTime));
                 $order->getResource()->saveAttribute($order, 'nav_last_sync_at');
+                $this->logger->info("ExportOrder: " . $fileName . " created");
             } catch (Exception $e) {
                 $this->logger->addDebug($e->getMessage());
             }
