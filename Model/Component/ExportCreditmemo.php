@@ -21,6 +21,8 @@ class ExportCreditmemo
 
     protected $storeId;
 
+    protected $scheduleLogLevel;
+
     protected $directoryList;
 
     protected $creditmemoModel;
@@ -84,7 +86,6 @@ class ExportCreditmemo
     }
 
     public function getCreditmemoCollection() {
-
         // TODO: Change criteria with nav_last_sync_at, website_id, store_id also after order attribute added
         // Use relation params for filter
             $creditmemoCollection = $this->creditmemoModel->getCollection();
@@ -109,4 +110,8 @@ class ExportCreditmemo
         return $this;
     }
 
+    public function setScheduleLogLevel($scheduleLogLevel) {
+        $this->scheduleLogLevel = $scheduleLogLevel;
+        return $this;
+    }
 }

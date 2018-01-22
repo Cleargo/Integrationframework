@@ -27,6 +27,8 @@ class ExportOrder
 
     protected $storeId;
 
+    protected $scheduleLogLevel;
+
     protected $directoryList;
     
     protected $orderFactory;
@@ -139,4 +141,8 @@ class ExportOrder
         return $this;
     }
 
+    public function setScheduleLogLevel($scheduleLogLevel) {
+        $this->scheduleLogLevel = $scheduleLogLevel;
+        return $this;
+    }
 }

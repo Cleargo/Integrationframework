@@ -136,6 +136,7 @@ class RunWorkflow
             $websiteId = $plan->getWebsiteId();
             $storeId = $plan->getStoreId();
             $workflowSchedule = $this->workflowScheduleFactory->create()->load($scheduleId)->loadRelation();
+            $scheduleLogLevel = $workflowSchedule->getFileLogLevel();
             //echo $workflowSchedule->getSelect();
             $relations = $workflowSchedule->getRelation();
             foreach ($relations as $rel) {
@@ -152,7 +153,8 @@ class RunWorkflow
                     $compModel = $this->objectManager->create($modelName)
                         ->setRelationParams($params)
                         ->setWebsiteId($websiteId)
-                        ->setStoreId($storeId);
+                        ->setStoreId($storeId)
+                        ->setScheduleLogLevel($scheduleLogLevel);
                     // Relation to Component is 1 to 1 ???
 
                     $compModel->execute();
