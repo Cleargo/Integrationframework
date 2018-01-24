@@ -145,6 +145,7 @@ class ImportShipment
                 } else {
                     $this->logger->debug($e);
                 }
+                throw $e;
             }
         }
     }

@@ -132,41 +132,53 @@ class RunWorkflow
 
         // Each plan should have only one pending record normally
         foreach ($workflowPlansCollection as $plan) {
-            var_dump("RunWorkflow: Workflow plan(id: ". $plan->getId() .") START");
-            $this->logger->info("----------RunWorkflow: Workflow plan(id: ". $plan->getId() .") executed----------");
-            // TODO: Load schedule by schedule_id and take the relation & component data
-            $scheduleId = $plan->getScheduleId();
-            $websiteId = $plan->getWebsiteId();
-            $storeId = $plan->getStoreId();
-            $workflowSchedule = $this->workflowScheduleFactory->create()->load($scheduleId)->loadRelation();
-            $scheduleLogLevel = $workflowSchedule->getFileLogLevel();
-            //echo $workflowSchedule->getSelect();
-            $relations = $workflowSchedule->getRelation();
-            foreach ($relations as $rel) {
-                $components = $rel['component'];
-                $params = $rel['parameters'];
-                foreach ($components as $comp) {
-                    // TODO: get the component name from relation and load the corresponding model. For example, ExportOrder
-                    $compName = $comp['name'];
-                    $modelName = "Cleargo\\Integrationframeworks\\Model\\Component\\" . $compName;
-                    //var_dump($modelName);
+            try {
+                var_dump("RunWorkflow: Workflow plan(id: ". $plan->getId() .") START");
+                $plan->setExecutionAt($currentTime);
+                $this->logger->info("----------RunWorkflow: Workflow plan(id: ". $plan->getId() .") executed----------");
+                // TODO: Load schedule by schedule_id and take the relation & component data
+                $scheduleId = $plan->getScheduleId();
+                $websiteId = $plan->getWebsiteId();
+                $storeId = $plan->getStoreId();
+                $workflowSchedule = $this->workflowScheduleFactory->create()->load($scheduleId)->loadRelation();
+                $scheduleLogLevel = $workflowSchedule->getFileLogLevel();
+                //echo $workflowSchedule->getSelect();
+                $relations = $workflowSchedule->getRelation();
+                foreach ($relations as $rel) {
+                    $components = $rel['component'];
+                    $params = $rel['parameters'];
+                    foreach ($components as $comp) {
+                        // TODO: get the component name from relation and load the corresponding model. For example, ExportOrder
+                        $compName = $comp['name'];
+                        $modelName = "Cleargo\\Integrationframeworks\\Model\\Component\\" . $compName;
+                        //var_dump($modelName);
 
-                    // TODO: run execute method in component model, will create interface for component later
-                    // TODO: Relation to Component is 1 to 1 ??
-                    $compModel = $this->objectManager->create($modelName)
-                        ->setRelationParams($params)
-                        ->setWebsiteId($websiteId)
-                        ->setStoreId($storeId)
-                        ->setScheduleLogLevel($scheduleLogLevel);
-                    // Relation to Component is 1 to 1 ???
+                        // TODO: run execute method in component model, will create interface for component later
+                        // TODO: Relation to Component is 1 to 1 ??
+                        $compModel = $this->objectManager->create($modelName)
+                            ->setRelationParams($params)
+                            ->setWebsiteId($websiteId)
+                            ->setStoreId($storeId)
+                            ->setScheduleLogLevel($scheduleLogLevel);
+                        // Relation to Component is 1 to 1 ???
 
-                    $this->logger->info("RunWorkflow: Component(".$compName.") executed");
-                    $compModel->execute();
-                    //var_dump($comp);
+                        $this->logger->info("RunWorkflow: Component(".$compName.") executed");
+                        $compModel->execute();
+                        //var_dump($comp);
+                    }
                 }
+                $endTime = date("Y-m-d H:i:s", time());
+                $plan->setEndTime($endTime);
+
+                // TODO: Temporally not change the plan status to completed for K11 NAV. Make all the plans loop foreach as magneto cron job.
+                // $plan->setStatus('completed');
+
+                var_dump("RunWorkflow: Workflow plan(id: ". $plan->getId() .") END");
+                $this->logger->info("----------RunWorkflow: Workflow plan(id: ". $plan->getId() .") completed----------");
+            } catch (\Exception $e) {
+                $plan->setStatus('error');
             }
-            var_dump("RunWorkflow: Workflow plan(id: ". $plan->getId() .") END");
-            $this->logger->info("----------RunWorkflow: Workflow plan(id: ". $plan->getId() .") completed----------");
+            $plan->save();
         }
         $this->logger->info("------------------------------ executePlan in RunWorkflow END ------------------------------");
     }
