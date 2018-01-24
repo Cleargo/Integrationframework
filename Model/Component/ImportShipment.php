@@ -66,7 +66,7 @@ class ImportShipment
 
     public function createOrderShipmentByXml() {
         $importFolderDir = $this->directoryList->getRoot() . self::IMPORT_FOLDER_DIRECTORY;
-        $fileLists = array_diff(scandir($importFolderDir), array('.', '..'));
+        $fileLists = array_diff(scandir($importFolderDir, SCANDIR_SORT_DESCENDING), array('.', '..'));
         //var_dump($fileLists);
 
         if (count($fileLists)) {
