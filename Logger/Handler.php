@@ -15,5 +15,5 @@ class Handler extends \Magento\Framework\Logger\Handler\Base
      * File name
      * @var string
      */
-    protected $fileName = '/var/log/nav/general.log';
+    protected $fileName = '/var/log/integrationframeworks/general.log';
 }
