@@ -91,7 +91,7 @@ class ExportOrder
                 $order->setNavLastSyncAt(date("Y-m-d H:i:s", $currentTime));
                 $order->getResource()->saveAttribute($order, 'nav_last_sync_at');
                 $this->logger->info("ExportOrder: " . $fileName . " created");
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $this->logger->addDebug($e->getMessage());
                 throw $e;
             }
