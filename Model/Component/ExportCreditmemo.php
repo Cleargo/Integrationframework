@@ -86,6 +86,7 @@ class ExportCreditmemo
                 $this->logger->info("ExportCreditmemo: " . $fileName . " created");
             } catch (Exception $e) {
                 $this->logger->addDebug($e->getMessage());
+                throw $e;
             }
         }
     }

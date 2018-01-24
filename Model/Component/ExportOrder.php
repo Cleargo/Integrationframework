@@ -93,6 +93,7 @@ class ExportOrder
                 $this->logger->info("ExportOrder: " . $fileName . " created");
             } catch (Exception $e) {
                 $this->logger->addDebug($e->getMessage());
+                throw $e;
             }
         }
     }
