@@ -85,7 +85,7 @@ class ExportCreditmemo
                 $creditmemo->getResource()->saveAttribute($creditmemo, 'nav_last_sync_at');
                 $this->logger->info("ExportCreditmemo: " . $fileName . " created");
             } catch (\Exception $e) {
-                $this->logger->addDebug($e->getMessage());
+                $this->logger->debug($e->getMessage());
                 throw $e;
             }
         }

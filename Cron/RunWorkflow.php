@@ -45,15 +45,12 @@ class RunWorkflow
      */
     public function generatePlan()
     {
-        $this->logger->addDebug("---------- RunWorkflow generatePlan START ----------");
+        $this->logger->debug("---------- RunWorkflow generatePlan START ----------");
         // Get Schedule Model
         $workflowSchedule = $this->workflowScheduleFactory->create();
         $workflowScheduleCollection = $workflowSchedule->getCollection();
 
         foreach ($workflowScheduleCollection as $scheduleItem) {
-            /*$detail = json_encode($item->getData());
-            $this->logger->addDebug($detail);*/
-
             $workflowScheduleType = $scheduleItem->getScheduleType();
             $workflowScheduleId = $scheduleItem->getWorkflowscheduleId();
             $workflowName = $scheduleItem->getName();
@@ -86,26 +83,17 @@ class RunWorkflow
                     $workflowPlans->setStartTime($planStartTime);
                     $workflowPlans->setStatus('pending');
                     $workflowPlans->save();
-
-                    /*$this->logger->addDebug("-----START-----");
-                    $this->logger->addDebug('$workflowScheduleId: ' . $workflowScheduleId);
-                    $this->logger->addDebug('$workflowWebsiteId: ' . $workflowWebsiteId);
-                    $this->logger->addDebug('$workflowStoreId: ' . $workflowStoreId);
-                    $this->logger->addDebug('$workflowName: ' . $workflowName);
-                    $this->logger->addDebug('$workflowExecutionActiveFrom(json): ' . json_encode($planStartTime));
-                    $this->logger->addDebug('$workflowExecutionActiveFrom(str): ' . $planStartTime);
-                    $this->logger->addDebug("-----END-----");*/
                 }
             } elseif ($workflowScheduleType == "RECURRING") {
                 // Create plan for RECURRING schedule
-                $this->logger->addDebug('RECURRING dtest');
+                $this->logger->debug('RECURRING dtest');
                 if ($workflowPlansCollection->count() < 5) {
                     // TODO: Create at least 5 pending plans for the schedule, update later
 
                 }
             }
         }
-        $this->logger->addDebug("---------- RunWorkflow generatePlan END ----------");
+        $this->logger->debug("---------- RunWorkflow generatePlan END ----------");
     }
 
     /**
@@ -117,25 +105,22 @@ class RunWorkflow
     {
         // TODO: directly run core method
         $this->logger->info("------------------------------ executePlan in RunWorkflow START ------------------------------");
-        var_dump("---------- executePlan in RunWorkflow ----------");
+        var_dump("---------- executePlan in RunWorkflow START ----------");
 
         // TODO: loop plan for execution, check start_time and status to determine which plan to run
         $currentTime = date("Y-m-d H:i:s", time());
-        //$this->logger->addDebug(json_encode($currentTime));
 
         $workflowPlans = $this->workflowPlansFactory->create();
         $workflowPlansCollection = $workflowPlans->getCollection();
         $workflowPlansCollection->addFieldToFilter('start_time', ['lteq' => $currentTime])
             ->addFieldToFilter('status', 'pending');
-        /*echo $workflowPlansCollection->getSelect();
-        $this->logger->addDebug('count: ' . $workflowPlansCollection->count());*/
 
         // Each plan should have only one pending record normally
         foreach ($workflowPlansCollection as $plan) {
             try {
-                var_dump("RunWorkflow: Workflow plan(id: ". $plan->getId() .") START");
+                var_dump("RunWorkflow: Workflow plan(id: ". $plan->getId() .") ". $plan->getScheduleName() ." START");
                 $plan->setExecutionAt($currentTime);
-                $this->logger->info("----------RunWorkflow: Workflow plan(id: ". $plan->getId() .") executed----------");
+                $this->logger->info("----------RunWorkflow: Workflow plan(id: ". $plan->getId() .") ". $plan->getScheduleName() ." executed----------");
                 // TODO: Load schedule by schedule_id and take the relation & component data
                 $scheduleId = $plan->getScheduleId();
                 $websiteId = $plan->getWebsiteId();
@@ -173,13 +158,14 @@ class RunWorkflow
                 // TODO: Temporally not change the plan status to completed for K11 NAV. Make all the plans loop foreach as magneto cron job.
                 // $plan->setStatus('completed');
 
-                var_dump("RunWorkflow: Workflow plan(id: ". $plan->getId() .") END");
-                $this->logger->info("----------RunWorkflow: Workflow plan(id: ". $plan->getId() .") completed----------");
+                var_dump("RunWorkflow: Workflow plan(id: ". $plan->getId() .") ". $plan->getScheduleName() ." END");
+                $this->logger->info("----------RunWorkflow: Workflow plan(id: ". $plan->getId() .") ". $plan->getScheduleName() ." completed----------");
             } catch (\Exception $e) {
                 $plan->setStatus('error');
             }
             $plan->save();
         }
+        var_dump("---------- executePlan in RunWorkflow END----------");
         $this->logger->info("------------------------------ executePlan in RunWorkflow END ------------------------------");
     }
 }
