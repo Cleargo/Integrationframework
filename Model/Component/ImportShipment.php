@@ -34,11 +34,6 @@ class ImportShipment
     
     protected $shipmentNotifier;
 
-    const IMPORT_FOLDER_DIRECTORY = "/var/nav/import/shipment/";
-
-    const EXPORT_FOLDER_DIRECTORY = "/var/nav/import/archive/shipment/";
-
-
     public function __construct(Logger $logger, DirectoryList $directoryList,
                                 OrderFactory $orderFactory, ConvertOrder $convertOrder,
                                 TrackFactory $shipmentTrackFactory, ShipmentNotifier $shipmentNotifier)
@@ -65,7 +60,9 @@ class ImportShipment
     }
 
     public function createOrderShipmentByXml() {
-        $importFolderDir = $this->directoryList->getRoot() . self::IMPORT_FOLDER_DIRECTORY;
+        $importPath = $this->relationParams->import_path;
+        $exportPath = $this->relationParams->export_path;
+        $importFolderDir = $this->directoryList->getRoot() . $importPath;
         $fileLists = array_diff(scandir($importFolderDir, SCANDIR_SORT_DESCENDING), array('.', '..'));
         //var_dump($fileLists);
 
@@ -134,7 +131,7 @@ class ImportShipment
                     $this->logger->info("ImportShipment: Shipment file(".$fileName.") processed and shipment created for Order(id: " . $orderIncrementId . ")");
 
                     // TODO: Move the successfully read file into archive folder
-                    rename($importFolderDir.$fileName, $this->directoryList->getRoot().self::EXPORT_FOLDER_DIRECTORY.$fileName);
+                    rename($importFolderDir.$fileName, $this->directoryList->getRoot().$exportPath.$fileName);
 
                 } else {
                     $this->logger->info("ImportShipment: Shipment file(".$fileName.") processed and shipment cannot be created for Order(id: " . $orderIncrementId . ")");
