@@ -25,9 +25,6 @@ class Ftp extends \Magento\Framework\Filesystem\Io\Ftp
         $host = $config->ftp_host;
         $user = $config->ftp_user;
         $password = $config->ftp_pw;
-        $secure_type = $config->secure_type;
-        $file_pattern = $config->file_pattern;
-        $upload_path = $config->upload_path;
 
         $connection = $this->open(
                     array(
