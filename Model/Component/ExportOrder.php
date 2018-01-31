@@ -66,6 +66,7 @@ class ExportOrder
         $orderStatus = $this->relationParams->order_status;
         $exportPath = $this->relationParams->export_path;
         $outputDir = $this->directoryList->getRoot() . $exportPath;
+        $archiveDir = $outputDir . 'archive/';
 
         // TODO: Get Order Collection
         $this->orderCollection = $this->getOrderCollection($orderStatus);
@@ -83,6 +84,15 @@ class ExportOrder
                     $this->logger->info('Fail to create directory on local server: ' . $outputDir);
                 }
             }
+            // Create directory for archive on local server
+            if (!is_dir($archiveDir)) {
+                $archiveResult = $this->io->mkdir($archiveDir, 0775);
+                if ($archiveResult) {
+                    $this->logger->info('Directory for archive created on local server: ' . $archiveDir);
+                } else {
+                    $this->logger->info('Fail to create directory for archive on local server: ' . $archiveDir);
+                }
+            }
             $this->logger->info("ExportOrder: " . $this->orderCollection->count() . " order(s) processed");
         }
 
@@ -98,14 +108,18 @@ class ExportOrder
             $content .= "</response>";
             $xml = new \SimpleXMLElement($content);
 
-            // TODO: generate xml for each order
-            $outputFile = fopen($outputDir . $fileName, "w");
             try {
+                // Generate xml for each order
+                $outputFile = fopen($outputDir . $fileName, "w");
                 fwrite($outputFile, $xml->asXML());
                 fclose($outputFile);
                 $order->setNavLastSyncAt(date("Y-m-d H:i:s", $currentTime));
                 $order->getResource()->saveAttribute($order, 'nav_last_sync_at');
                 $this->logger->info("ExportOrder: " . $fileName . " created");
+                // Generate xml for each order to archive folder
+                $archiveFile = fopen($archiveDir . $fileName, "w");
+                fwrite($archiveFile, $xml->asXML());
+                fclose($archiveFile);
             } catch (\Exception $e) {
                 $this->logger->debug($e->getMessage());
                 throw $e;

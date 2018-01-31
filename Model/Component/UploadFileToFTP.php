@@ -71,10 +71,12 @@ class UploadFileToFTP extends \Cleargo\Integrationframeworks\Model\Component\Abs
 
                 // Upload file and remove it in magento local
                 foreach ($fileLists as $file) {
+                    if (!is_dir($importFolderDir.$file)) {
                     $this->write($upload_path.$file, $importFolderDir.$file);
                     $this->logger->info("File from local ".$importFolderDir.$file." uploaded to FTP ".$upload_path.$file);
                     // Remove uploaded file on local
                     unlink($importFolderDir.$file);
+                    }
                 }
 
                 // Close connection
