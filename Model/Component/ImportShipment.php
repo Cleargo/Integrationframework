@@ -61,7 +61,7 @@ class ImportShipment
 
     public function createOrderShipmentByXml() {
         $importPath = $this->relationParams->import_path;
-        $exportPath = $this->relationParams->export_path;
+        $archivePath = $this->relationParams->archive_path;
         $importFolderDir = $this->directoryList->getRoot() . $importPath;
         $fileLists = array_diff(scandir($importFolderDir, SCANDIR_SORT_DESCENDING), array('.', '..'));
         //var_dump($fileLists);
@@ -131,7 +131,7 @@ class ImportShipment
                     $this->logger->info("ImportShipment: Shipment file(".$fileName.") processed and shipment created for Order(id: " . $orderIncrementId . ")");
 
                     // TODO: Move the successfully read file into archive folder
-                    rename($importFolderDir.$fileName, $this->directoryList->getRoot().$exportPath.$fileName);
+                    rename($importFolderDir.$fileName, $this->directoryList->getRoot().$archivePath.$fileName);
 
                 } else {
                     $this->logger->info("ImportShipment: Shipment file(".$fileName.") processed and shipment cannot be created for Order(id: " . $orderIncrementId . ")");
