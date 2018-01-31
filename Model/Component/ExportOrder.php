@@ -8,6 +8,7 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Filesystem\DirectoryList;
 use Magento\Sales\Model\OrderFactory;
+use Magento\Framework\Filesystem\Io\File;
 
 class ExportOrder
 {
@@ -33,10 +34,13 @@ class ExportOrder
     
     protected $orderFactory;
 
+    protected $io;
+
 
     public function __construct(Logger $logger, OrderRepositoryInterface $orderRepository,
                                 SearchCriteriaBuilder $searchCriteriaBuilder, FilterBuilder $filterBuilder,
-                                DirectoryList $directoryList, OrderFactory $orderFactory)
+                                DirectoryList $directoryList, OrderFactory $orderFactory,
+                                File $io)
     {
         $this->logger = $logger;
         $this->orderRepository = $orderRepository;
@@ -44,6 +48,7 @@ class ExportOrder
         $this->filterBuilder = $filterBuilder;
         $this->directoryList = $directoryList;
         $this->orderFactory = $orderFactory;
+        $this->io = $io;
     }
 
     public function execute() {
@@ -67,7 +72,17 @@ class ExportOrder
 
         if (!$this->orderCollection->count()) {
             $this->logger->info("ExportOrder: There are no Order for export");
+            return;
         } else {
+            // Create directory on local server
+            if (!is_dir($outputDir)) {
+                $result = $this->io->mkdir($outputDir, 0775);
+                if ($result) {
+                    $this->logger->info('Directory created on local server: ' . $outputDir);
+                } else {
+                    $this->logger->info('Fail to create directory on local server: ' . $outputDir);
+                }
+            }
             $this->logger->info("ExportOrder: " . $this->orderCollection->count() . " order(s) processed");
         }
 

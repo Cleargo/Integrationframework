@@ -8,6 +8,8 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Filesystem\DirectoryList;
 use Magento\Sales\Model\Order\Creditmemo;
+use Magento\Framework\Filesystem\Io\File;
+
 
 class ExportCreditmemo
 {
@@ -27,12 +29,15 @@ class ExportCreditmemo
 
     protected $creditmemoModel;
 
+    protected $io;
 
-    public function __construct(Logger $logger, DirectoryList $directoryList, Creditmemo $creditmemoModel)
+
+    public function __construct(Logger $logger, DirectoryList $directoryList, Creditmemo $creditmemoModel, File $io)
     {
         $this->logger = $logger;
         $this->directoryList = $directoryList;
         $this->creditmemoModel = $creditmemoModel;
+        $this->io = $io;
     }
 
     public function execute() {
@@ -60,7 +65,17 @@ class ExportCreditmemo
 
         if (!$this->creditmemoCollection->count()) {
             $this->logger->info("ExportCreditmemo: There are no Creditmemo for export");
+            return;
         } else {
+            // Create directory on local server
+            if (!is_dir($outputDir)) {
+                $result = $this->io->mkdir($outputDir, 0775);
+                if ($result) {
+                    $this->logger->info('Directory created on local server: ' . $outputDir);
+                } else {
+                    $this->logger->info('Fail to create directory on local server: ' . $outputDir);
+                }
+            }
             $this->logger->info("ExportCreditmemo: " . $this->creditmemoCollection->count() . " creditmemo(s) processed");
         }
 
