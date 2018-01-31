@@ -49,11 +49,6 @@ class DownloadFileFromFTP extends \Cleargo\Integrationframeworks\Model\Component
                 var_dump("Connecting to FTP");
                 $this->setConnection($this->relationParams);
 
-                // TODO: get source file list on FTP server and then download it to magento destination.
-                var_dump($source_path);
-                var_dump($destination_path);
-                var_dump($this->directoryList->getRoot().$destination_path);
-
                 $this->cd($source_path);
                 $fileList = $this->ls();
                 foreach ($fileList as $file) {
@@ -64,8 +59,8 @@ class DownloadFileFromFTP extends \Cleargo\Integrationframeworks\Model\Component
                         $result = $this->read($file['id'], $this->directoryList->getRoot().$destination_path.$file['text']);
                         if ($result) {
                             $this->logger->info("File from FTP ".$file['id']." downloaded to local ".$this->directoryList->getRoot().$destination_path.$file['text']);
-                            // TODO: after download the file successfully, will delete the file on FTP
-
+                            // After download the file successfully, will delete the file on FTP
+                            $this->rm($file['id']);
                         } else {
                             $this->logger->info("File Download FAIL: File from FTP ".$file['id']." cannot download to local ".$this->directoryList->getRoot().$destination_path.$file['text']);
                         }
