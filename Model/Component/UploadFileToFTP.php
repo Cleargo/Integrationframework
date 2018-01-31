@@ -65,6 +65,7 @@ class UploadFileToFTP extends \Cleargo\Integrationframeworks\Model\Component\Abs
                     if($name) {
                         $directory .= $name . '/';
                         $this->mkdir($directory);
+                        $this->logger->info("Create directory on FTP server: " . $directory);
                     }
                 }
 
