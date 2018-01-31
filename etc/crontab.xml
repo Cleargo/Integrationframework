@@ -5,7 +5,7 @@
 			<schedule>0 0 * * *</schedule>
 		</job>-->
 		<job instance="Cleargo\Integrationframeworks\Cron\RunWorkflow" method="executePlan" name="cleargo_integrationframeworks_runworkflow:executePlan">
-			<schedule>0 0 * * *</schedule>
+			<schedule>*/15 * * * *</schedule>
 		</job>
 	</group>
 </config>
