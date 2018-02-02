@@ -53,12 +53,7 @@ class ExportOrder
 
     public function execute() {
         var_dump('Export Order Start');
-
-        // TODO: Export Order xml
         $this->exportOrderXml();
-
-        // TODO: Update last_sync for Order
-
         var_dump('Export Order Executed');
     }
 
@@ -68,7 +63,6 @@ class ExportOrder
         $outputDir = $this->directoryList->getRoot() . $exportPath;
         $archiveDir = $outputDir . 'archive/';
 
-        // TODO: Get Order Collection
         $this->orderCollection = $this->getOrderCollection($orderStatus);
 
         if (!$this->orderCollection->count()) {
@@ -96,7 +90,7 @@ class ExportOrder
             $this->logger->info("ExportOrder: " . $this->orderCollection->count() . " order(s) processed");
         }
 
-        // TODO: Export Order Xml
+        // Export Order Xml
         foreach ($this->orderCollection as $order) {
             $currentTime = time();
             $fileTime = date("Ymd_HisS", $currentTime);
@@ -128,36 +122,10 @@ class ExportOrder
     }
 
     public function getOrderCollection($orderStatus) {
-        // TODO: Change criteria with nav_last_sync_at, website_id, store_id also after order attribute added
-
-        if ($orderStatus == "confirmed and paid") {
-            // Get Order by repository
-            /*$searchCriteria = $this->searchCriteriaBuilder->addFilters(
-                [
-                    $this->filterBuilder->setField('status')
-                        ->setValue('complete')
-                        ->setConditionType('eq')
-                        ->create(),
-                ])->create();
-            $data = $this->orderRepository->getList($searchCriteria);*/
-
-            // Get Order by OrderFactory
-            $orderModel = $this->orderFactory->create();
-            $orderCollection = $orderModel->getCollection();
-            $data = $orderCollection->addFieldToFilter('status', 'complete')->addFieldToFilter('store_id', $this->storeId)
-                ->addFieldToFilter('nav_last_sync_at', array('null' => true));
-
-        } else {
-            // Get Order by repository
-            /*$searchCriteria = $this->searchCriteriaBuilder->addFilter('status', 'complete', 'eq')->create();
-            $data = $this->orderRepository->getList($searchCriteria);*/
-
-            // Get Order by OrderFactory
-            $orderModel = $this->orderFactory->create();
-            $orderCollection = $orderModel->getCollection;
-            $data = $orderCollection->addFieldToFilter('status', 'complete')->addFieldToFilter('store_id', $this->storeId)
-                ->addFieldToFilter('nav_last_sync_at', array('null' => true));
-        }
+        $orderModel = $this->orderFactory->create();
+        $orderCollection = $orderModel->getCollection();
+        $data = $orderCollection->addFieldToFilter('status', $orderStatus)->addFieldToFilter('store_id', $this->storeId)
+            ->addFieldToFilter('nav_last_sync_at', array('null' => true));
         return $data;
     }
 
