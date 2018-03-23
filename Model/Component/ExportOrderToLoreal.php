@@ -91,42 +91,48 @@ class ExportOrderToLoreal
         }
 
         // Export Order Xml
-
+        $csv = "";
+        $csv .= "increment_id,blank";
+        $csv .= "\r\n";
         foreach ($this->orderCollection as $order) {
-            $currentTime = time();
-            $fileTime = date("Ymd_HisS", $currentTime);
-            $fileName = 'order_export_' . $order->getIncrementId() . '_' . $fileTime . '.xml';
-            //var_dump($fileName);
-
-            $content = "<response>&#xA;";
+            /*$content = "<response>&#xA;";
             $content .=  $order->toXml([], null, null, false);
             $content .= "</response>";
-            $xml = new \SimpleXMLElement($content);
+            $xml = new \SimpleXMLElement($content);*/
+            $csv .= $order->getIncrementId();
+            $csv .= ",blank";
+            $csv .= "\r\n";
+            $currentTime = time();
+            $order->setNavLastSyncAt(date("Y-m-d H:i:s", $currentTime));
+            $order->getResource()->saveAttribute($order, 'nav_last_sync_at');
+        }
 
-            try {
-                // Generate xml for each order
-                $outputFile = fopen($outputDir . $fileName, "w");
-                fwrite($outputFile, $xml->asXML());
-                fclose($outputFile);
-                $order->setNavLastSyncAt(date("Y-m-d H:i:s", $currentTime));
-                $order->getResource()->saveAttribute($order, 'nav_last_sync_at');
-                $this->logger->info("ExportOrder: " . $fileName . " created");
-                // Generate xml for each order to archive folder
-                $archiveFile = fopen($archiveDir . $fileName, "w");
-                fwrite($archiveFile, $xml->asXML());
-                fclose($archiveFile);
-            } catch (\Exception $e) {
-                $this->logger->debug($e->getMessage());
-                throw $e;
-            }
+        //Output file
+        $currentTime = time();
+        $fileTime = date("Ymd_HisS", $currentTime);
+        $fileName = 'order_export_' . $fileTime . '.csv';
+        //var_dump($fileName);
+        try {
+            // Generate xml for each order
+            $outputFile = fopen($outputDir . $fileName, "w");
+            fwrite($outputFile, $csv);
+            fclose($outputFile);
+            // Generate xml for each order to archive folder
+            $archiveFile = fopen($archiveDir . $fileName, "w");
+            fwrite($archiveFile, $csv);
+            fclose($archiveFile);
+            $this->logger->info("ExportOrder: " . $fileName . " created");
+        } catch (\Exception $e) {
+            $this->logger->debug($e->getMessage());
+            throw $e;
         }
     }
 
     public function getOrderCollection($orderStatus) {
         $orderModel = $this->orderFactory->create();
         $orderCollection = $orderModel->getCollection();
-        $data = $orderCollection->addFieldToFilter('status', $orderStatus)->addFieldToFilter('store_id', $this->storeId)
-            ->addFieldToFilter('nav_last_sync_at', array('null' => true));
+        $data = $orderCollection->addFieldToFilter('status', $orderStatus)->addFieldToFilter('store_id', $this->storeId);
+            //->addFieldToFilter('nav_last_sync_at', array('null' => true));
         return $data;
     }
 
