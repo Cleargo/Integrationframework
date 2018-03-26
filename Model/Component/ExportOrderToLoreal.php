@@ -113,75 +113,77 @@ class ExportOrderToLoreal
             }
             $this->logger->info("ExportOrder: " . $this->orderCollection->count() . " order(s) processed");
         }
-
-        // Export Order Xml
-        $csv = "";
-        $csv_order = "";
-        $csv .= "Sales Period,Order Date,Order Type,Order Status,Entity Code,Staff No,Staff Name,Team Code,Item Code,Brand Name,Division,Category,Unit Price,Order Qty,Provision Qty,Received Qty,Description";
-        $csv .= "\r\n";
-        foreach ($this->orderCollection as $order) {
-            //Sales Period
-            $csv_order .= $this->scopeConfig->getValue('product/event/latest_event_name') . ",";
-            //Order Date
-            $csv_order .= date("d-m-y", strtotime($order->getCreatedAt())) . ",";
-            //Order Type
-            $csv_order .= $order->getStoreId() == 2 ? "Free Good," : "Staff Purchase,";
-            //Order Status
-            $csv_order .= $order->getStatus() . ",";
-            //Entity Code
-            $customer = $this->customer->getById($order->getCustomerId());
-            $csv_order .= $customer->getCustomAttribute('loreal_entity_id')->getValue() . ",";
-            //Staff No
-            $csv_order .= $customer->getCustomAttribute('staff_no')->getValue() . ",";
-            //Staff Name
-            $csv_order .= $customer->getFirstname() . " " . $customer->getLastname() . ",";
-            //Team Code
-            $csv_order .= $customer->getCustomAttribute('team_dept_id')->getValue() . ",";
-            //ordered Items
-            $products = $order->getAllItems();
-            foreach ($products as $product){
-                $csv .= $csv_order;
-                $product_factory = $this->product->create()->load($product->getProductId());
-                //Item Code
-                $csv .= $product->getSku() . ",";
-                //Brand Name
-                $csv .= $this->getSelectOptionText($product_factory, 'brand_name') . ",";
-                //Brand
-                $csv .= $this->getSelectOptionText($product_factory, 'brand') . ",";
-                //Division
-                $csv .= $this->getSelectOptionText($product_factory, 'division') . ",";
-                //Category
-                $csv .= $this->getProductCategory($product_factory) . ",";
-                //Unit Price
-                $csv .= $product->getPrice() . ",";
-                //Order Qty
-                $csv .= $product->getQtyOrdered() . ",";
-                //Provision Qty
-                $csv .= $product->getQtyInvoiced() . ",";
-                //Received Qty
-                $csv .= $product->getQtyShipped() . ",";
-                //Description
-                $csv .= $product->getName();
-                $csv .= "\r\n";
-            }
-            $csv .= "\r\n";
-            $currentTime = time();
-            $order->setNavLastSyncAt(date("Y-m-d H:i:s", $currentTime));
-            $order->getResource()->saveAttribute($order, 'nav_last_sync_at');
-        }
-        //Output file
-        $currentTime = time();
-        $fileTime = date("Ymd_HisS", $currentTime);
-        $fileName = 'order_export_' . $fileTime . '.csv';
-        //var_dump($fileName);
         try {
+            //Output file
+            $currentTime = time();
+            $fileTime = date("Ymd_HisS", $currentTime);
+            $fileName = 'order_export_' . $fileTime . '.csv';
             // Generate xml for each order
             $outputFile = fopen($outputDir . $fileName, "w");
-            fwrite($outputFile, $csv);
-            fclose($outputFile);
-            // Generate xml for each order to archive folder
             $archiveFile = fopen($archiveDir . $fileName, "w");
-            fwrite($archiveFile, $csv);
+            // Export Order Xml
+            $csv_record = [];
+            $csv_order = [];
+            $csv_order_item = [];
+            $csv_header = [
+                "Sales Period",
+                "Order Date",
+                "Order Type",
+                "Order Status",
+                "Entity Code",
+                "Staff No",
+                "Staff Name",
+                "Item Code",
+                "Brand",
+                "Brand Name",
+                "Division",
+                "Category",
+                "Unit Price",
+                "Order Qty",
+                "Provision Qty",
+                "Received Qty",
+                "Description"
+            ];
+            fputcsv($outputFile, $csv_header);
+            fputcsv($archiveFile, $csv_header);
+            foreach ($this->orderCollection as $order) {
+                //Customer
+                $customer = $this->customer->getById($order->getCustomerId());
+                //Ordered Items
+                $products = $order->getAllItems();
+                $csv_order = [
+                    $this->scopeConfig->getValue('product/event/latest_event_name'),//Sales Period
+                    date("d-m-Y", strtotime($order->getCreatedAt())),//Order Date
+                    $order->getStoreId() == 2 ? "Free Good" : "Staff Purchase",//Order Type
+                    $order->getStatus(),//Order Status
+                    $customer->getCustomAttribute('loreal_entity_id')->getValue(),//Entity Code
+                    $customer->getCustomAttribute('staff_no')->getValue(),//Staff No
+                    $customer->getFirstname() . " " . $customer->getLastname(),//Staff Name
+                ];
+                foreach ($products as $product){
+                    //Get Product
+                    $product_factory = $this->product->create()->load($product->getProductId());
+                    $csv_order_item = [
+                        $product->getSku(),//Item Code
+                        $this->getSelectOptionText($product_factory, 'brand_name'),//Brand Name
+                        $this->getSelectOptionText($product_factory, 'brand'),//Brand
+                        $this->getSelectOptionText($product_factory, 'division'),//Division
+                        $this->getProductCategory($product_factory),//Category
+                        $product->getPrice(),//Unit Price
+                        $product->getQtyOrdered(),//Order Qty
+                        $product->getQtyInvoiced(),//Provision Qty
+                        $product->getQtyShipped(),//Received Qty
+                        $product->getName()//Description
+                    ];
+                    $csv_record = array_merge($csv_order, $csv_order_item);
+                    fputcsv($outputFile, $csv_record);
+                    fputcsv($archiveFile, $csv_record);
+                }
+                $currentTime = time();
+                $order->setNavLastSyncAt(date("Y-m-d H:i:s", $currentTime));
+                $order->getResource()->saveAttribute($order, 'nav_last_sync_at');
+            }
+            fclose($outputFile);
             fclose($archiveFile);
             $this->logger->info("ExportOrder: " . $fileName . " created");
         } catch (\Exception $e) {
@@ -193,9 +195,9 @@ class ExportOrderToLoreal
     public function getOrderCollection($orderStatus) {
         $orderModel = $this->orderFactory->create();
         $orderCollection = $orderModel->getCollection();
-        $data = $orderCollection;
-            //->addFieldToFilter('status', $orderStatus)
-            //->addFieldToFilter('store_id', $this->storeId);
+        $data = $orderCollection
+            ->addFieldToFilter('status', $orderStatus)
+            ->addFieldToFilter('store_id', $this->storeId);
             //->addFieldToFilter('nav_last_sync_at', array('null' => true));
         return $data;
     }
@@ -241,6 +243,6 @@ class ExportOrderToLoreal
                 $cat_name[] = $category->getName();
             }
         }
-        return end($cat_name);
+        return $cat_name[0];
     }
 }
