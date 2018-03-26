@@ -116,7 +116,7 @@ class ExportOrderToLoreal
         try {
             //Output file
             $currentTime = time();
-            $fileTime = date("Ymd_HisS", $currentTime);
+            $fileTime = date("Ymd_His", $currentTime);
             $fileName = 'order_export_' . $fileTime . '.csv';
             // Generate xml for each order
             $outputFile = fopen($outputDir . $fileName, "w");
