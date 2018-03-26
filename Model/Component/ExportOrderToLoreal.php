@@ -9,6 +9,10 @@ use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Filesystem\DirectoryList;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Framework\Filesystem\Io\File;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Catalog\Model\ProductFactory;
+use Magento\Catalog\Api\CategoryRepositoryInterface;
 
 class ExportOrderToLoreal
 {
@@ -36,11 +40,27 @@ class ExportOrderToLoreal
 
     protected $io;
 
+    protected $scopeConfig;
 
-    public function __construct(Logger $logger, OrderRepositoryInterface $orderRepository,
-                                SearchCriteriaBuilder $searchCriteriaBuilder, FilterBuilder $filterBuilder,
-                                DirectoryList $directoryList, OrderFactory $orderFactory,
-                                File $io)
+    protected $customer;
+
+    protected $product;
+
+    protected $category;
+
+    public function __construct(
+        Logger $logger,
+        OrderRepositoryInterface $orderRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        FilterBuilder $filterBuilder,
+        DirectoryList $directoryList,
+        OrderFactory $orderFactory,
+        File $io,
+        ScopeConfigInterface $scopeConfigInterface,
+        CustomerRepositoryInterface $customerRepositoryInterface,
+        ProductFactory $productFactory,
+        CategoryRepositoryInterface $categoryRepositoryInterface
+    )
     {
         $this->logger = $logger;
         $this->orderRepository = $orderRepository;
@@ -49,6 +69,10 @@ class ExportOrderToLoreal
         $this->directoryList = $directoryList;
         $this->orderFactory = $orderFactory;
         $this->io = $io;
+        $this->scopeConfig = $scopeConfigInterface;
+        $this->customer = $customerRepositoryInterface;
+        $this->product = $productFactory;
+        $this->category = $categoryRepositoryInterface;
     }
 
     public function execute() {
@@ -92,21 +116,59 @@ class ExportOrderToLoreal
 
         // Export Order Xml
         $csv = "";
-        $csv .= "increment_id,blank";
+        $csv_order = "";
+        $csv .= "Sales Period,Order Date,Order Type,Order Status,Entity Code,Staff No,Staff Name,Team Code,Item Code,Brand Name,Division,Category,Unit Price,Order Qty,Provision Qty,Received Qty,Description";
         $csv .= "\r\n";
         foreach ($this->orderCollection as $order) {
-            /*$content = "<response>&#xA;";
-            $content .=  $order->toXml([], null, null, false);
-            $content .= "</response>";
-            $xml = new \SimpleXMLElement($content);*/
-            $csv .= $order->getIncrementId();
-            $csv .= ",blank";
+            //Sales Period
+            $csv_order .= $this->scopeConfig->getValue('product/event/latest_event_name') . ",";
+            //Order Date
+            $csv_order .= date("d-m-y", strtotime($order->getCreatedAt())) . ",";
+            //Order Type
+            $csv_order .= $order->getStoreId() == 2 ? "Free Good," : "Staff Purchase,";
+            //Order Status
+            $csv_order .= $order->getStatus() . ",";
+            //Entity Code
+            $customer = $this->customer->getById($order->getCustomerId());
+            $csv_order .= $customer->getCustomAttribute('loreal_entity_id')->getValue() . ",";
+            //Staff No
+            $csv_order .= $customer->getCustomAttribute('staff_no')->getValue() . ",";
+            //Staff Name
+            $csv_order .= $customer->getFirstname() . " " . $customer->getLastname() . ",";
+            //Team Code
+            $csv_order .= $customer->getCustomAttribute('team_dept_id')->getValue() . ",";
+            //ordered Items
+            $products = $order->getAllItems();
+            foreach ($products as $product){
+                $csv .= $csv_order;
+                $product_factory = $this->product->create()->load($product->getProductId());
+                //Item Code
+                $csv .= $product->getSku() . ",";
+                //Brand Name
+                $csv .= $this->getSelectOptionText($product_factory, 'brand_name') . ",";
+                //Brand
+                $csv .= $this->getSelectOptionText($product_factory, 'brand') . ",";
+                //Division
+                $csv .= $this->getSelectOptionText($product_factory, 'division') . ",";
+                //Category
+                $csv .= $this->getProductCategory($product_factory) . ",";
+                //Unit Price
+                $csv .= $product->getPrice() . ",";
+                //Order Qty
+                $csv .= $product->getQtyOrdered() . ",";
+                //Provision Qty
+                $csv .= $product->getQtyInvoiced() . ",";
+                //Received Qty
+                $csv .= $product->getQtyShipped() . ",";
+                //Description
+                $csv .= $product->getName();
+                $csv .= "\r\n";
+            }
             $csv .= "\r\n";
             $currentTime = time();
             $order->setNavLastSyncAt(date("Y-m-d H:i:s", $currentTime));
             $order->getResource()->saveAttribute($order, 'nav_last_sync_at');
         }
-
         //Output file
         $currentTime = time();
         $fileTime = date("Ymd_HisS", $currentTime);
@@ -131,7 +193,9 @@ class ExportOrderToLoreal
     public function getOrderCollection($orderStatus) {
         $orderModel = $this->orderFactory->create();
         $orderCollection = $orderModel->getCollection();
-        $data = $orderCollection->addFieldToFilter('status', $orderStatus)->addFieldToFilter('store_id', $this->storeId);
+        $data = $orderCollection;
+            //->addFieldToFilter('status', $orderStatus)
+            //->addFieldToFilter('store_id', $this->storeId);
             //->addFieldToFilter('nav_last_sync_at', array('null' => true));
         return $data;
     }
@@ -154,5 +218,29 @@ class ExportOrderToLoreal
     public function setScheduleLogLevel($scheduleLogLevel) {
         $this->scheduleLogLevel = $scheduleLogLevel;
         return $this;
+    }
+
+    protected function getSelectOptionText($product, $code){
+        $optionId = $product->getDataByKey($code);
+        $optionText = null;
+        $attributes = $product->getAttributes();
+        if ($optionId && array_key_exists($code, $attributes)) {
+            $attr = $attributes[$code];
+            if ($attr->usesSource()) {
+                $optionText = $attr->getSource()->getOptionText($optionId);
+            }
+        }
+        return $optionText;
+    }
+
+    protected function getProductCategory($product){
+        $cat_name = [];
+        if ($categoryIds = $product->getCustomAttribute('category_ids')) {
+            foreach ($categoryIds->getValue() as $categoryId) {
+                $category = $this->category->get($categoryId);
+                $cat_name[] = $category->getName();
+            }
+        }
+        return end($cat_name);
     }
 }
