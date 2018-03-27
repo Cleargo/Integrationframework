@@ -9,6 +9,7 @@
 <?php $filelist = $block->processFilelist(); ?>
 <div class="container">
     <form class="form form-download-csv" method="post" action="<?php echo $block->getDownloadLink(); ?>">
+        <?php echo $this->getBlockHtml('formkey'); ?>
         <?php foreach ($filelist as $store_id => $list): ?>
             <div class="row">
                 <div class="title-store"><?php echo $block->getStoreName($store_id); ?></div>
