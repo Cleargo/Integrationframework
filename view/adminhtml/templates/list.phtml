@@ -8,18 +8,21 @@
 ?>
 <?php $filelist = $block->processFilelist(); ?>
 <div class="container">
-    <?php foreach ($filelist as $store_id => $list): ?>
-        <div class="row">
-            <div class="title-store"><?php echo $block->getStoreName($store_id); ?></div>
-            <?php foreach ($list as $key => $items): ?>
-                <div class="title-type"><?php echo ucwords($key . ' Orders'); ?></div>
-                <select class="select select-csv">
-                    <option value=""><?php echo __('Please Select'); ?></option>
-                    <?php foreach ($items as $item): ?>
-                        <option value="<?php echo $item; ?>"><?php echo $block->getFileLabel($item); ?></option>
-                    <?php endforeach; ?>
-                </select>
-            <?php endforeach; ?>
-        </div>
-    <?php endforeach; ?>
+    <form class="form form-download-csv" method="post" action="<?php echo $block->getDownloadLink(); ?>">
+        <?php foreach ($filelist as $store_id => $list): ?>
+            <div class="row">
+                <div class="title-store"><?php echo $block->getStoreName($store_id); ?></div>
+                <?php foreach ($list as $key => $items): ?>
+                    <div class="title-type"><?php echo ucwords($key . ' Orders'); ?></div>
+                    <select name="download-file-<?php echo $store_id . "-" . $key;?>" class="select select-csv">
+                        <option value=""><?php echo __('Please Select'); ?></option>
+                        <?php foreach ($items as $item): ?>
+                            <option value="<?php echo $item; ?>"><?php echo $block->getFileLabel($item); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                <?php endforeach; ?>
+            </div>
+        <?php endforeach; ?>
+        <button class="action scalable primary" type="submit"><?php echo __('Download'); ?></button>
+    </form>
 </div>

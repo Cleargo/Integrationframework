@@ -91,4 +91,8 @@ class ListOutputFiles extends \Magento\Framework\View\Element\Template
         $time = str_replace('.csv', '', $filename_parts[$idx + 1]);
         return __("Order Export on ") . date("Y-m-d", strtotime($date)) . " " . date("H:i:s", strtotime($time));
     }
+
+    public function getDownloadLink(){
+        return $this->getUrl('cleargo_integrationframeworks/workflowdownload/download');
+    }
 }
