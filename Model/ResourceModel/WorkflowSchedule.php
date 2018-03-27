@@ -23,7 +23,7 @@ class WorkflowSchedule extends \Magento\Framework\Model\ResourceModel\Db\Abstrac
      */
     public function loadRelation(\Magento\Framework\Model\AbstractModel $object){
         $connection = $this->getConnection();
-        var_dump($object->getId());
+        //var_dump($object->getId());
         //get relation
         $select = $connection->select()->joinLeft(
             ['relation' => $this->getTable('workflow_component_schedule_relation')],

@@ -17,21 +17,32 @@ class Download extends \Magento\Backend\App\Action
     protected $workflowScheduleFactory;
 
     protected $rawFactory;
+
+    protected $logger;
+
+    protected $directoryList;
+
     /**
-     * Constructor
-     *
+     * Download constructor.
      * @param \Magento\Backend\App\Action\Context $context
-     * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
+     * @param \Magento\Framework\App\Response\Http\FileFactory $fileFactory
+     * @param \Cleargo\Integrationframeworks\Model\WorkflowScheduleFactory $workflowScheduleFactory
+     * @param \Magento\Framework\Controller\Result\RawFactory $resultRawFactory
+     * @param \Psr\Log\LoggerInterface $loggerInterface
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
         \Magento\Framework\App\Response\Http\FileFactory $fileFactory,
         \Cleargo\Integrationframeworks\Model\WorkflowScheduleFactory $workflowScheduleFactory,
-        \Magento\Framework\Controller\Result\RawFactory $resultRawFactory
+        \Magento\Framework\Controller\Result\RawFactory $resultRawFactory,
+        \Psr\Log\LoggerInterface $loggerInterface,
+        \Magento\Framework\Filesystem\DirectoryList $directoryList
     ) {
         $this->fileFactory = $fileFactory;
         $this->workflowScheduleFactory = $workflowScheduleFactory;
         $this->rawFactory = $resultRawFactory;
+        $this->logger = $loggerInterface;
+        $this->directoryList = $directoryList;
         parent::__construct($context);
     }
 
@@ -42,14 +53,14 @@ class Download extends \Magento\Backend\App\Action
      */
     public function execute()
     {
-        $post = $this->getRequest()->getPostValue();
+        $post = $this->getRequest()->getParams();
         //Set Filename
         $filename = "";
-        foreach ($post as $value){
-            if ($value !== NULL)
+        foreach ($post as $key => $value){
+            if ($value != '' && $key != 'form_key')
                 $filename = $value;
         }
-        if ($filename !== "") {
+        if ($filename != "") {
             //Set file path
             $var_location = $this->directoryList->getRoot();
             //Load workflow directory settings
@@ -62,10 +73,12 @@ class Download extends \Magento\Backend\App\Action
                 $path_set = $var_location . $params['export_path'];
             }
             $file = $path_set . $filename;
-            $content = file_get_contents($file);
+            $file_content = file_get_contents($file);
+            $this->logger->info($file);
+            $this->logger->info($file_content);
             $this->fileFactory->create(
                 $filename, //File name
-                $content //Content
+                $file_content //Content
             );
             $resultRaw = $this->rawFactory->create();
             return $resultRaw;
