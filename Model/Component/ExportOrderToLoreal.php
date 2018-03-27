@@ -115,9 +115,12 @@ class ExportOrderToLoreal
         }
         try {
             //Output file
+            $unpaid_text = '';
+            if ($orderStatus == 'pending')
+                $unpaid_text = 'unpaid_';
             $currentTime = time();
             $fileTime = date("Ymd_His", $currentTime);
-            $fileName = 'order_export_' . $fileTime . '.csv';
+            $fileName = 'order_export_' . $unpaid_text . $this->storeId . "_" . $fileTime . '.csv';
             // Generate xml for each order
             $outputFile = fopen($outputDir . $fileName, "w");
             $archiveFile = fopen($archiveDir . $fileName, "w");
