@@ -18,8 +18,6 @@ class Download extends \Magento\Backend\App\Action
 
     protected $rawFactory;
 
-    protected $logger;
-
     protected $directoryList;
 
     /**
@@ -28,20 +26,17 @@ class Download extends \Magento\Backend\App\Action
      * @param \Magento\Framework\App\Response\Http\FileFactory $fileFactory
      * @param \Cleargo\Integrationframeworks\Model\WorkflowScheduleFactory $workflowScheduleFactory
      * @param \Magento\Framework\Controller\Result\RawFactory $resultRawFactory
-     * @param \Psr\Log\LoggerInterface $loggerInterface
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
         \Magento\Framework\App\Response\Http\FileFactory $fileFactory,
         \Cleargo\Integrationframeworks\Model\WorkflowScheduleFactory $workflowScheduleFactory,
         \Magento\Framework\Controller\Result\RawFactory $resultRawFactory,
-        \Psr\Log\LoggerInterface $loggerInterface,
         \Magento\Framework\Filesystem\DirectoryList $directoryList
     ) {
         $this->fileFactory = $fileFactory;
         $this->workflowScheduleFactory = $workflowScheduleFactory;
         $this->rawFactory = $resultRawFactory;
-        $this->logger = $loggerInterface;
         $this->directoryList = $directoryList;
         parent::__construct($context);
     }
@@ -74,8 +69,6 @@ class Download extends \Magento\Backend\App\Action
             }
             $file = $path_set . $filename;
             $file_content = file_get_contents($file);
-            $this->logger->info($file);
-            $this->logger->info($file_content);
             $this->fileFactory->create(
                 $filename, //File name
                 $file_content //Content
