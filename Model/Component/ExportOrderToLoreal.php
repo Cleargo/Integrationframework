@@ -200,8 +200,8 @@ class ExportOrderToLoreal
         $orderCollection = $orderModel->getCollection();
         $data = $orderCollection
             ->addFieldToFilter('status', $orderStatus)
-            ->addFieldToFilter('store_id', $this->storeId);
-            //->addFieldToFilter('nav_last_sync_at', array('null' => true));
+            ->addFieldToFilter('store_id', $this->storeId)
+            ->addFieldToFilter('nav_last_sync_at', array('null' => true));
         return $data;
     }
 
