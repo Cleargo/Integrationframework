@@ -8,22 +8,35 @@
 ?>
 <?php $filelist = $block->processFilelist(); ?>
 <div class="container">
-    <form class="form form-download-csv" method="post" action="<?php echo $block->getDownloadLink(); ?>">
-        <?php echo $this->getBlockHtml('formkey'); ?>
-        <?php foreach ($filelist as $store_id => $list): ?>
-            <div class="row">
-                <div class="title-store"><?php echo $block->getStoreName($store_id); ?></div>
-                <?php foreach ($list as $key => $items): ?>
+    <?php foreach ($filelist as $store_id => $list): ?>
+        <div class="row">
+            <div class="title-store"><?php echo $block->getStoreName($store_id); ?></div>
+            <?php foreach ($list as $key => $items): ?>
+                <form class="form form-download-csv" method="post" action="<?php echo $block->getDownloadLink(); ?>">
+                    <?php echo $this->getBlockHtml('formkey'); ?>
                     <div class="title-type"><?php echo ucwords($key . ' Orders'); ?></div>
-                    <select name="download-file-<?php echo $store_id . "-" . $key;?>" class="select select-csv">
-                        <option value=""><?php echo __('Please Select'); ?></option>
+                    <?php foreach ($items as $item): ?>
+                        <input name="file-list[]" value="<?php echo $item;?>" type="hidden">
+                    <?php endforeach; ?>
+                    <button class="action scalable primary" type="submit"><?php echo __('Download'); ?></button>
+                </form>
+            <?php endforeach; ?>
+        </div>
+    <?php endforeach; ?>
+    <!--All in one-->
+    <div class="row">
+        <div class="title-store"><?php echo __('Download all orders'); ?></div>
+        <form class="form form-download-csv" method="post" action="<?php echo $block->getDownloadLink(); ?>">
+            <?php echo $this->getBlockHtml('formkey'); ?>
+            <div class="title-type"><?php echo ucwords('All Orders'); ?></div>
+            <?php foreach ($filelist as $store_id => $list): ?>
+                <?php foreach ($list as $key => $items): ?>
                         <?php foreach ($items as $item): ?>
-                            <option value="<?php echo $item; ?>"><?php echo $block->getFileLabel($item); ?></option>
+                            <input name="file-list[]" value="<?php echo $item;?>" type="hidden">
                         <?php endforeach; ?>
-                    </select>
                 <?php endforeach; ?>
-            </div>
-        <?php endforeach; ?>
-        <button class="action scalable primary" type="submit"><?php echo __('Download'); ?></button>
-    </form>
+            <?php endforeach; ?>
+            <button class="action scalable primary" type="submit"><?php echo __('Download'); ?></button>
+        </form>
+    </div>
 </div>

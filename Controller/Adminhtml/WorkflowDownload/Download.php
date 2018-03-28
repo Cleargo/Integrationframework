@@ -48,36 +48,44 @@ class Download extends \Magento\Backend\App\Action
      */
     public function execute()
     {
-        $post = $this->getRequest()->getParams();
-        //Set Filename
-        $filename = "";
-        foreach ($post as $key => $value){
-            if ($value != '' && $key != 'form_key')
-                $filename = $value;
+        $post_merge_file = $this->getRequest()->getParam('file-list');
+        //Set file path
+        $var_location = $this->directoryList->getRoot();
+        //Load workflow directory settings
+        $workflow = $this->workflowScheduleFactory->create()->load(self::SCHEDULE_ID);
+        $workflow->loadRelation();
+        $relations = $workflow->getRelation();
+        foreach ($relations as $rel) {
+            $params = $rel['parameters'];
+            $params = json_decode($params, true);
+            $path_set = $var_location . $params['export_path'];
         }
-        if ($filename != "") {
-            //Set file path
-            $var_location = $this->directoryList->getRoot();
-            //Load workflow directory settings
-            $workflow = $this->workflowScheduleFactory->create()->load(self::SCHEDULE_ID);
-            $workflow->loadRelation();
-            $relations = $workflow->getRelation();
-            foreach ($relations as $rel) {
-                $params = $rel['parameters'];
-                $params = json_decode($params, true);
-                $path_set = $var_location . $params['export_path'];
+        $output = [];
+        $first_file = TRUE;
+        foreach ($post_merge_file as $file){
+            $file = $path_set . $file;
+            if (($handle = fopen($file, "r")) !== FALSE) {
+                $row = 1;
+                while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                    $num = count($data);
+                    if ($row > 1 || $first_file){
+                        $output[] = $data;
+                    }
+                    $row++;
+                    $first_file = FALSE;
+                }
+                fclose($handle);
             }
-            $file = $path_set . $filename;
-            $file_content = file_get_contents($file);
-            $this->fileFactory->create(
-                $filename, //File name
-                $file_content //Content
-            );
-            $resultRaw = $this->rawFactory->create();
-            return $resultRaw;
-        } else {
-            $resultRedirect = $this->resultRedirectFactory->create();
-            return $resultRedirect->setPath('*/*/');
         }
+        $file_content = "";
+        foreach($output as $arr) {
+            $file_content .= implode(",", $arr) . "\r\n";
+        }
+        $this->fileFactory->create(
+            "output.csv", //File name
+            $file_content //Content
+        );
+        $resultRaw = $this->rawFactory->create();
+        return $resultRaw;
     }
 }
