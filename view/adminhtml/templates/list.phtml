@@ -6,29 +6,36 @@
  * @author    py.yick@cleargo.com
  */
 ?>
-<?php $filelist = $block->processFilelist(); ?>
+<?php
+$filelist = $block->processFilelist();
+$config_value = $block->getStartEndDate();
+?>
 <div class="container">
+    <div class="row" style="margin-bottom: 10px;">
+        <div class="start-date">Start Date: <?php echo $config_value['start_date']; ?></div>
+        <div class="start-end">End Date: <?php echo $config_value['end_date']; ?></div>
+    </div>
     <?php foreach ($filelist as $store_id => $list): ?>
         <div class="row">
-            <div class="title-store"><?php echo $block->getStoreName($store_id); ?></div>
+            <h3 class="title-store" style="margin-bottom: 10px;"><?php echo $block->getStoreName($store_id); ?></h3>
             <?php foreach ($list as $key => $items): ?>
                 <form class="form form-download-csv" method="post" action="<?php echo $block->getDownloadLink(); ?>">
                     <?php echo $this->getBlockHtml('formkey'); ?>
-                    <div class="title-type"><?php echo ucwords($key . ' Orders'); ?></div>
+                    <h4 class="title-type" style="margin-bottom: 10px;"><?php echo ucwords($key . ' Orders'); ?></h4>
                     <?php foreach ($items as $item): ?>
                         <input name="file-list[]" value="<?php echo $item;?>" type="hidden">
                     <?php endforeach; ?>
-                    <button class="action scalable primary" type="submit"><?php echo __('Download'); ?></button>
+                    <button class="action scalable primary" type="submit" style="margin-bottom: 10px;"><?php echo __('Download'); ?></button>
                 </form>
             <?php endforeach; ?>
         </div>
     <?php endforeach; ?>
     <!--All in one-->
-    <div class="row">
-        <div class="title-store"><?php echo __('Download all orders'); ?></div>
+    <div class="row" style="margin-bottom: 10px;">
+        <h3 class="title-store" style="margin-bottom: 10px;"><?php echo __('Download all orders'); ?></h3>
         <form class="form form-download-csv" method="post" action="<?php echo $block->getDownloadLink(); ?>">
             <?php echo $this->getBlockHtml('formkey'); ?>
-            <div class="title-type"><?php echo ucwords('All Orders'); ?></div>
+            <h4 class="title-type" style="margin-bottom: 10px;"><?php echo ucwords('All Orders'); ?></h4>
             <?php foreach ($filelist as $store_id => $list): ?>
                 <?php foreach ($list as $key => $items): ?>
                         <?php foreach ($items as $item): ?>

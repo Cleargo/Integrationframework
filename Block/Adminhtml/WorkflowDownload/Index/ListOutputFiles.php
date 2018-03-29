@@ -95,4 +95,11 @@ class ListOutputFiles extends \Magento\Framework\View\Element\Template
     public function getDownloadLink(){
         return $this->getUrl('cleargo_integrationframeworks/workflowdownload/download');
     }
+
+    public function getStartEndDate(){
+        return [
+            'start_date' => $this->_scopeConfig->getValue('product/event/latest_event_start_date'),
+            'end_date' => $this->_scopeConfig->getValue('product/event/latest_event_end_date'),
+        ];
+    }
 }
