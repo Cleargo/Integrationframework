@@ -179,10 +179,10 @@ class Download extends \Magento\Backend\App\Action
                             $this->getSelectOptionText($product_factory, 'brand'),//Brand
                             $this->getSelectOptionText($product_factory, 'division'),//Division
                             $this->getProductCategory($product_factory),//Category
-                            $product->getPrice(),//Unit Price
-                            $product->getQtyOrdered(),//Order Qty
-                            $product->getQtyInvoiced(),//Provision Qty
-                            $product->getQtyShipped(),//Received Qty
+                            (int)$product->getPrice(),//Unit Price
+                            (int)$product->getQtyOrdered(),//Order Qty
+                            (int)$product->getQtyInvoiced(),//Provision Qty
+                            (int)$product->getQtyShipped(),//Received Qty
                             $product->getName()//Description
                         ];
                         $csv_record = array_merge($csv_order, $csv_order_item);
