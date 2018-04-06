@@ -19,12 +19,12 @@ $config_value = $block->getStartEndDate();
     <?php foreach ($filelist as $store_id => $list): ?>
         <div class="row">
             <h3 class="title-store" style="margin-bottom: 10px;"><?php echo $block->getStoreName($store_id); ?></h3>
-            <?php foreach ($list as $key => $items): ?>
+            <?php foreach ($list as $items): ?>
                 <form class="form form-download-csv" method="post" action="<?php echo $block->getDownloadLink(); ?>">
                     <?php echo $this->getBlockHtml('formkey'); ?>
-                    <h4 class="title-type" style="margin-bottom: 10px;"><?php echo ucwords($key . ' Orders'); ?></h4>
+                    <h4 class="title-type" style="margin-bottom: 10px;"><?php echo ucwords($items . ' Orders'); ?></h4>
                     <input name="format" value="csv" type="hidden">
-                    <input name="type" value="<?php echo $store_id . "-" . $key;?>" type="hidden">
+                    <input name="type" value="<?php echo $store_id . "-" . $items;?>" type="hidden">
                     <button class="action scalable primary" type="submit" style="margin-bottom: 10px;"><?php echo __('Download'); ?></button>
                 </form>
             <?php endforeach; ?>
@@ -49,12 +49,12 @@ $config_value = $block->getStartEndDate();
     <?php foreach ($filelist as $store_id => $list): ?>
         <div class="row">
             <h3 class="title-store" style="margin-bottom: 10px;"><?php echo $block->getStoreName($store_id); ?></h3>
-            <?php foreach ($list as $key => $items): ?>
+            <?php foreach ($list as $items): ?>
                 <form class="form form-download-csv" method="post" action="<?php echo $block->getDownloadLink(); ?>">
                     <?php echo $this->getBlockHtml('formkey'); ?>
-                    <h4 class="title-type" style="margin-bottom: 10px;"><?php echo ucwords($key . ' Orders'); ?></h4>
+                    <h4 class="title-type" style="margin-bottom: 10px;"><?php echo ucwords($items . ' Orders'); ?></h4>
                     <input name="format" value="txt" type="hidden">
-                    <input name="type" value="<?php echo $store_id . "-" . $key;?>" type="hidden">
+                    <input name="type" value="<?php echo $store_id . "-" . $items;?>" type="hidden">
                     <button class="action scalable primary" type="submit" style="margin-bottom: 10px;"><?php echo __('Download'); ?></button>
                 </form>
             <?php endforeach; ?>
