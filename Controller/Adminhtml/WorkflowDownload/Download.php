@@ -26,6 +26,8 @@ class Download extends \Magento\Backend\App\Action
 
     protected $scopeConfig;
 
+    protected $purchaseQuotaHelper;
+
     /**
      * Download constructor.
      * @param \Magento\Backend\App\Action\Context $context
@@ -44,7 +46,8 @@ class Download extends \Magento\Backend\App\Action
         \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface,
         \Magento\Catalog\Model\ProductFactory $productFactory,
         \Magento\Catalog\Api\CategoryRepositoryInterface $categoryRepositoryInterface,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfigInterface
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfigInterface,
+        \Cleargo\PurchaseQuota\Helper\Data $PurchaseQuotaHelperData
     ) {
         $this->fileFactory = $fileFactory;
         $this->rawFactory = $resultRawFactory;
@@ -54,6 +57,7 @@ class Download extends \Magento\Backend\App\Action
         $this->product = $productFactory;
         $this->category = $categoryRepositoryInterface;
         $this->scopeConfig = $scopeConfigInterface;
+        $this->purchaseQuotaHelper = $PurchaseQuotaHelperData;
 
         parent::__construct($context);
     }
@@ -69,7 +73,6 @@ class Download extends \Magento\Backend\App\Action
         $post_format = $this->getRequest()->getParam('format');
         //Separate case
         $criteria = $this->typeHandler($post_type);
-        $this->logger->info(json_encode($criteria));
         $orders = $this->getOrderCollection($criteria['website_id'], $criteria['status']);
         $file_content = $this->processOrderCollection($orders, $post_format);
         $this->fileFactory->create(
@@ -101,8 +104,6 @@ class Download extends \Magento\Backend\App\Action
         $data = $orderCollection;
         $cond_arr = [];
         $field_arr = [];
-        $this->logger->info($orderStatus);
-        $this->logger->info($store_id);
         if ($orderStatus !== null){
             $field_arr[] = 'status';
             $cond_arr[] = ['in' => $orderStatus];
@@ -164,7 +165,7 @@ class Download extends \Magento\Backend\App\Action
                     $csv_order = [
                         $this->scopeConfig->getValue('product/event/latest_event_name'),//Sales Period
                         date("d-m-Y", strtotime($order->getCreatedAt())),//Order Date
-                        $order->getStoreId() == 2 ? "Free Good" : "Staff Purchase",//Order Type
+                        $this->isFgStore($order->getStoreId()) ? "Free Good" : "Staff Purchase",//Order Type
                         $order->getStatus(),//Order Status
                         $loreal_entity_id,
                         $staff_no,
@@ -174,7 +175,7 @@ class Download extends \Magento\Backend\App\Action
                         //Get Product
                         $product_factory = $this->product->create()->load($product->getProductId());
                         $csv_order_item = [
-                            $product->getSku(),//Item Code
+                            $this->trimSku($product->getSku()),//Item Code
                             $this->getSelectOptionText($product_factory, 'brand_name'),//Brand Name
                             $this->getSelectOptionText($product_factory, 'brand'),//Brand
                             $this->getSelectOptionText($product_factory, 'division'),//Division
@@ -224,9 +225,9 @@ class Download extends \Magento\Backend\App\Action
                         $brand_code = $this->getSelectOptionText($product_factory, 'brand_name');
                         $sap_division_code = $this->mapBrandCodeSapDivisionCode($brand_code);
                         //See if free goods checkout or staff purchase checkout
-                        $type = $order->getStoreId() == 2 ? "YFD" : "YOR";
+                        $type = $this->isFgStore($order->getStoreId()) ? "YFD" : "YOR";
                         //See if free goods checkout or staff purchase checkout
-                        $wh_type = $order->getStoreId() == 2 ? "LSFG" : "LSPO";
+                        $wh_type = $this->isFgStore($order->getStoreId()) ? "LSFG" : "LSPO";
                         //Staff code
                         //Get Customer id
                         $customer_id = $order->getCustomerId();
@@ -242,7 +243,7 @@ class Download extends \Magento\Backend\App\Action
                         $delivery_date = $this->scopeConfig->getValue("product/event/latest_event_delivery_date");
                         $delivery_date = $this->formatDateTxt($delivery_date);
                         //Sold To, Free Goods TBC
-                        $sold_to = $order->getStoreId() == 2 ? "TBC" : "120467";
+                        $sold_to = $this->isFgStore($order->getStoreId()) ? $this->scopeConfig->getValue("product/event/fg_soldto_code") : $this->scopeConfig->getValue("product/event/sp_soldto_code");
                         $row[] = [
                             "", //Empty separator
                             $sap_division_code, //sap_division_code
@@ -257,7 +258,7 @@ class Download extends \Magento\Backend\App\Action
                             $staff_no, //ShipTo
                             "NA", //MSICust
                             "", //Remark
-                            $product->getSku(), //Material
+                            $this->trimSku($product->getSku()), //Material
                             "X", //MSIMaterial
                             (int)$product->getQtyOrdered(), //OrderQty
                             "0", //FreeQty
@@ -268,7 +269,6 @@ class Download extends \Magento\Backend\App\Action
                         $csv_record = array_merge($csv_record, $row);
                     }
                 }
-                $this->logger->info(json_encode($csv_record));
                 foreach ($csv_record as $line)
                     $csv_output .= $this->outputCSV($line, $type) . "\r\n";
             }
@@ -307,8 +307,10 @@ class Download extends \Magento\Backend\App\Action
                 $category = $this->category->get($categoryId);
                 $cat_name[] = $category->getName();
             }
+            if ($cat_name)
+                return $cat_name[0];
         }
-        return $cat_name[0];
+        return null;
     }
 
     protected function mapBrandCodeSapDivisionCode($brand_code){
@@ -362,5 +364,15 @@ class Download extends \Magento\Backend\App\Action
 
     protected function formatDateTxt($date){
         return date("Ymd", strtotime($date));
+    }
+
+    protected function isFgStore($order_id){
+        return in_array($order_id, $this->purchaseQuotaHelper->getWebsiteStoreIds('fg'));
+    }
+
+    protected function trimSku($sku){
+        $sku_parts = explode("-", $sku);
+        array_pop($sku_parts);
+        return implode("-", $sku_parts);
     }
 }
