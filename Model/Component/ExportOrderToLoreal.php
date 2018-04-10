@@ -222,7 +222,7 @@ class ExportOrderToLoreal
                 $store_ids = $this->purchaseQuotaHelper->getWebsiteStoreIds('fg');
             $data->addFieldToFilter('store_id', ['in' => $store_ids]);
         }
-        //TODO: Filter processed order enable, temp disable during testing
+        //Filter processed order
         $data->addFieldToFilter('nav_last_sync_at', ['null' => true]);
         $field_arr[] = 'nav_last_sync_at';
         $cond_arr[] = ['null' => true];
