@@ -171,7 +171,7 @@ class ExportOrderToLoreal
                     $delivery_date = $this->formatDateTxt($delivery_date);
                     //Sold To, Free Goods TBC
                     $sold_to = $this->isFgStore($order->getStoreId()) ? $this->scopeConfig->getValue("product/event/fg_soldto_code") : $this->scopeConfig->getValue("product/event/sp_soldto_code");
-                    $csv_row[] = [
+                    $csv_row = [
                         "", //Empty separator
                         $sap_division_code, //sap_division_code
                         $type, //type
@@ -193,12 +193,12 @@ class ExportOrderToLoreal
                         "", //GLN
                         "", //EDISupp
                     ];
+                    $this->outputFiles($csv_header, $csv_row, $orderStatus, $outputDir, $staff_no, $brand_code);
                 }
                 $currentTime = time();
                 $order->setNavLastSyncAt(date("Y-m-d H:i:s", $currentTime));
                 $order->getResource()->saveAttribute($order, 'nav_last_sync_at');
             }
-            $this->outputFiles($csv_header, $csv_row, $orderStatus, $outputDir);
         } catch (\Exception $e) {
             $this->logger->debug($e->getMessage());
             throw $e;
@@ -212,6 +212,7 @@ class ExportOrderToLoreal
         if ($orderStatus !== ""){
             $data->addFieldToFilter('status', ['in' => $orderStatus]);
         } else{
+            //No classification on order status for SAP
             $data->addFieldToFilter('status', ['in' => ['processing', 'complete']]);
         }
         if ($store_id !== ""){
@@ -222,25 +223,35 @@ class ExportOrderToLoreal
             $data->addFieldToFilter('store_id', ['in' => $store_ids]);
         }
         //TODO: Filter processed order enable, temp disable during testing
-        /*$data->addFieldToFilter('nav_last_sync_at', ['null' => true]);
+        $data->addFieldToFilter('nav_last_sync_at', ['null' => true]);
         $field_arr[] = 'nav_last_sync_at';
-        $cond_arr[] = ['null' => true];*/
+        $cond_arr[] = ['null' => true];
         return $data;
     }
 
-    protected function outputFiles($header, $rows, $orderStatus, $outputDir){
+    protected function outputFiles($header, $row, $orderStatus, $outputDir, $customer_id, $brand_code){
         //Output file
+        //Store
+        $store_label = $this->isFgStore($this->storeId) ? "fg" : "sp";
         $unpaid_text = '';
         if ($orderStatus == 'pending')
-            $unpaid_text = 'unpaid_';
+            $unpaid_text = 'unpaid';
+        //Staff no
+        $customer_text = "";
+        if ($customer_id != "")
+            $customer_text = $customer_id . '_';
+        //Brand_Code
+        $brand_text = "";
+        if ($brand_code != "")
+            $brand_text = $brand_code . '_';
+        //Timestamp
         $currentTime = time();
         $fileTime = date("Ymd_His", $currentTime);
-        $fileName = 'order_export_' . $this->storeId . "_" . $unpaid_text . $fileTime . '.csv';
+        $fileName = $store_label . "_" . $customer_text . $brand_text . $unpaid_text . $fileTime . '.csv';
         // Generate xml for each order
         $outputFile = fopen($outputDir . $fileName, "w");
         fputcsv($outputFile, $header, "|");
-        foreach ($rows as $row)
-            fputcsv($outputFile, $row, "|");
+        fputcsv($outputFile, $row, "|");
         fclose($outputFile);
         $this->logger->info("ExportOrder: " . $fileName . " created");
     }
@@ -344,8 +355,8 @@ class ExportOrderToLoreal
         return date("Ymd", strtotime($date));
     }
 
-    protected function isFgStore($order_id){
-        return in_array($order_id, $this->purchaseQuotaHelper->getWebsiteStoreIds('fg'));
+    protected function isFgStore($store_id){
+        return in_array($store_id, $this->purchaseQuotaHelper->getWebsiteStoreIds('fg'));
     }
 
     protected function trimSku($sku){
