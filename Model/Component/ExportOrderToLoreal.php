@@ -224,33 +224,33 @@ class ExportOrderToLoreal
         }
         //Filter processed order
         $data->addFieldToFilter('nav_last_sync_at', ['null' => true]);
-        $field_arr[] = 'nav_last_sync_at';
-        $cond_arr[] = ['null' => true];
         return $data;
     }
 
     protected function outputFiles($header, $row, $orderStatus, $outputDir, $customer_id, $brand_code){
         //Output file
         //Store
-        $store_label = $this->isFgStore($this->storeId) ? "fg" : "sp";
-        $unpaid_text = '';
-        if ($orderStatus == 'pending')
-            $unpaid_text = 'unpaid';
+        $store_label = $this->isFgStore($this->storeId) ? "fg_" : "sp_";
         //Staff no
-        $customer_text = "";
         if ($customer_id != "")
             $customer_text = $customer_id . '_';
+        else
+            $customer_text = 'null_';
         //Brand_Code
-        $brand_text = "";
         if ($brand_code != "")
-            $brand_text = $brand_code . '_';
-        //Timestamp
-        $currentTime = time();
-        $fileTime = date("Ymd_His", $currentTime);
-        $fileName = $store_label . "_" . $customer_text . $brand_text . $unpaid_text . $fileTime . '.csv';
-        // Generate xml for each order
-        $outputFile = fopen($outputDir . $fileName, "w");
-        fputcsv($outputFile, $header, "|");
+            $brand_text = $brand_code;
+        else
+            $brand_text = 'null';
+        //Final Filename
+        $fileName = $store_label . $customer_text . $brand_text . '.txt';
+        // Generate TXT for each order
+        $need_header = TRUE;
+        if (file_exists($outputDir . $fileName)){
+            $need_header = FALSE;
+        }
+        $outputFile = fopen($outputDir . $fileName, "a+");
+        if ($need_header)
+            fputcsv($outputFile, $header, "|");
         fputcsv($outputFile, $row, "|");
         fclose($outputFile);
         $this->logger->info("ExportOrder: " . $fileName . " created");
