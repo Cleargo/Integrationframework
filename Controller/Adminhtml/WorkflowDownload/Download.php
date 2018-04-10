@@ -102,20 +102,19 @@ class Download extends \Magento\Backend\App\Action
         $orderModel = $this->orderFactory->create();
         $orderCollection = $orderModel->getCollection();
         $data = $orderCollection;
-        $cond_arr = [];
-        $field_arr = [];
-        if ($orderStatus !== null){
-            $field_arr[] = 'status';
-            $cond_arr[] = ['in' => $orderStatus];
+        if ($orderStatus !== ""){
+            $data->addFieldToFilter('status', ['in' => $orderStatus]);
         } else{
-            $field_arr[] = 'status';
-            $cond_arr[] = ['in' => ['pending', 'complete']];
+            $data->addFieldToFilter('status', ['in' => ['processing', 'complete']]);
         }
-        if ($store_id !== null){
-            $field_arr[] = 'store_id';
-            $cond_arr[] = ['in' => $store_id];
+        if ($store_id !== ""){
+            if ($store_id == 1)
+                $store_ids = $this->purchaseQuotaHelper->getWebsiteStoreIds('sp');
+            else
+                $store_ids = $this->purchaseQuotaHelper->getWebsiteStoreIds('fg');
+            $data->addFieldToFilter('store_id', ['in' => $store_ids]);
         }
-        return $data->addFieldToFilter($field_arr, [$cond_arr]);
+        return $data;
     }
 
     protected function processOrderCollection($orderCollection, $type){
