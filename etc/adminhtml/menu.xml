@@ -7,6 +7,6 @@
 		<add action="cleargo_integrationframeworks/workflowcomponentdefinition/index" id="Cleargo::cleargo_integrationframeworks_workflowcomponentdefinition" module="Cleargo_Integrationframeworks" parent="Cleargo::top_level" resource="Magento_Backend::content" sortOrder="9999" title="WorkflowComponentDefinition"/>
 		<add action="cleargo_integrationframeworks/workflowcomponentdefinitionparameters/index" id="Cleargo::cleargo_integrationframeworks_workflowcomponentdefinitionparameters" module="Cleargo_Integrationframeworks" parent="Cleargo::top_level" resource="Magento_Backend::content" sortOrder="9999" title="WorkflowComponentDefinitionParameters"/>
 		<add action="cleargo_integrationframeworks/workflowplans/index" id="Cleargo::cleargo_integrationframeworks_workflowplans" module="Cleargo_Integrationframeworks" parent="Cleargo::top_level" resource="Magento_Backend::content" sortOrder="9999" title="WorkflowPlans"/>
-		<add action="cleargo_integrationframeworks/workflowdownload/index" id="Cleargo::cleargo_integrationframeworks_workflowdownload" module="Cleargo_Integrationframeworks" parent="Cleargo::top_level" resource="Magento_Backend::content" sortOrder="9999" title="Download Output Files"/>
+		<!--add action="cleargo_integrationframeworks/workflowdownload/index" id="Cleargo::cleargo_integrationframeworks_workflowdownload" module="Cleargo_Integrationframeworks" parent="Cleargo::top_level" resource="Magento_Backend::content" sortOrder="9999" title="Download Output Files"/-->
 	</menu>
 </config>

@@ -193,7 +193,7 @@ class ExportOrderToLoreal
                         "", //GLN
                         "", //EDISupp
                     ];
-                    $this->outputFiles($csv_header, $csv_row, $orderStatus, $outputDir, $staff_no, $brand_code);
+                    $this->outputFiles($csv_header, $csv_row, $outputDir, $staff_no, $order_date);
                 }
                 $currentTime = time();
                 $order->setNavLastSyncAt(date("Y-m-d H:i:s", $currentTime));
@@ -227,23 +227,20 @@ class ExportOrderToLoreal
         return $data;
     }
 
-    protected function outputFiles($header, $row, $orderStatus, $outputDir, $customer_id, $brand_code){
+    protected function outputFiles($header, $row, $outputDir, $customer_id, $order_date){
         //Output file
         //Store
-        $store_label = $this->isFgStore($this->storeId) ? "fg_" : "sp_";
+        $store_label = $this->isFgStore($this->storeId) ? "FG" : "SP";
         //Staff no
         if ($customer_id != "")
             $customer_text = $customer_id . '_';
         else
             $customer_text = 'null_';
-        //Brand_Code
-        if ($brand_code != "")
-            $brand_text = $brand_code;
-        else
-            $brand_text = 'null';
+        //Timestamp
+        $fileTime = $order_date . "_";
         //Final Filename
-        $fileName = $store_label . $customer_text . $brand_text . '.txt';
-        // Generate TXT for each order
+        $fileName = $fileTime . $customer_text . $store_label . '.dat';
+        // Generate DAT for each order
         $need_header = TRUE;
         if (file_exists($outputDir . $fileName)){
             $need_header = FALSE;
