@@ -155,14 +155,20 @@ class ExportOrderToLoreal
                     $type = $this->isFgStore($order->getStoreId()) ? "YFD" : "YOR";
                     //See if free goods checkout or staff purchase checkout
                     $wh_type = $this->isFgStore($order->getStoreId()) ? "LSFG" : "LSPO";
-                    //Staff code
+                    //Staff code + ShipTo
                     //Get Customer id
                     $customer_id = $order->getCustomerId();
                     $staff_no = '';
+                    $ship_to = '';
+                    $team_dept_desc = '';
                     if ($customer_id != '') {
                         $customer = $this->customer->getById($customer_id);
                         if ($customer->getCustomAttribute('staff_no'))
                             $staff_no = $customer->getCustomAttribute('staff_no')->getValue();
+                        if ($customer->getCustomAttribute('ship_to'))
+                            $ship_to = $customer->getCustomAttribute('ship_to')->getValue();
+                        if ($customer->getCustomAttribute('team_dept_desc'))
+                            $team_dept_desc = $customer->getCustomAttribute('team_dept_desc')->getValue();
                     }
                     //Order Date
                     $order_date = $this->formatDateTxt($order->getCreatedAt());
@@ -171,6 +177,7 @@ class ExportOrderToLoreal
                     $delivery_date = $this->formatDateTxt($delivery_date);
                     //Sold To, Free Goods TBC
                     $sold_to = $this->isFgStore($order->getStoreId()) ? $this->scopeConfig->getValue("product/event/fg_soldto_code") : $this->scopeConfig->getValue("product/event/sp_soldto_code");
+                    $price = $this->isFgStore($order->getStoreId()) ? 0 : $product->getFinalPrice();
                     $csv_row = [
                         "", //Empty separator
                         $sap_division_code, //sap_division_code
@@ -182,14 +189,14 @@ class ExportOrderToLoreal
                         $delivery_date, //DelDate
                         $delivery_date, //InvDate
                         $sold_to, //SoldTo
-                        $staff_no, //ShipTo
+                        $ship_to, //ShipTo
                         "NA", //MSICust
-                        "", //Remark
+                        $team_dept_desc, //Remark
                         $this->trimSku($product->getSku()), //Material
                         "X", //MSIMaterial
                         (int)$product->getQtyOrdered(), //OrderQty
                         "0", //FreeQty
-                        (int)$product->getPrice(), //Price
+                        (int)$price, //Price
                         "", //GLN
                         "", //EDISupp
                     ];
