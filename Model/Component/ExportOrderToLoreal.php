@@ -153,6 +153,8 @@ class ExportOrderToLoreal
                     $sap_division_code = $this->mapBrandCodeSapDivisionCode($brand_code);
                     //See if free goods checkout or staff purchase checkout
                     $type = $this->isFgStore($order->getStoreId()) ? "YFD" : "YOR";
+                    //Resaon
+                    $reason = $this->isFgStore($order->getStoreId()) ? "H00" : "";
                     //See if free goods checkout or staff purchase checkout
                     $wh_type = $this->isFgStore($order->getStoreId()) ? "LSFG" : "LSPO";
                     //Staff code + ShipTo
@@ -182,7 +184,7 @@ class ExportOrderToLoreal
                         "", //Empty separator
                         $sap_division_code, //sap_division_code
                         $type, //type
-                        "H00", //Reason
+                        $reason, //Reason
                         $wh_type, //WHType
                         $staff_no, //PORef
                         $order_date, //OrdDate
