@@ -142,7 +142,6 @@ class ExportOrderToLoreal
                 "GLN",
                 "EDISupp"
             ];
-            $csv_row = [];
             foreach ($this->orderCollection as $order) {
                 $products = $order->getAllItems();
                 foreach ($products as $product) {
@@ -177,9 +176,10 @@ class ExportOrderToLoreal
                     //Delivery Date
                     $delivery_date = $this->scopeConfig->getValue("product/event/latest_event_delivery_date");
                     $delivery_date = $this->formatDateTxt($delivery_date);
-                    //Sold To, Free Goods TBC
+                    //Sold To
                     $sold_to = $this->isFgStore($order->getStoreId()) ? $this->scopeConfig->getValue("product/event/fg_soldto_code") : $this->scopeConfig->getValue("product/event/sp_soldto_code");
-                    $price = $this->isFgStore($order->getStoreId()) ? 0 : $product->getFinalPrice();
+                    //Price
+                    $price = $this->isFgStore($order->getStoreId()) ? 0 : $product->getPrice() - $product->getDiscountAmount();
                     $csv_row = [
                         "", //Empty separator
                         $sap_division_code, //sap_division_code
@@ -198,7 +198,7 @@ class ExportOrderToLoreal
                         "X", //MSIMaterial
                         (int)$product->getQtyOrdered(), //OrderQty
                         "0", //FreeQty
-                        (int)$price, //Price
+                        $price, //Price
                         "", //GLN
                         "", //EDISupp
                     ];
