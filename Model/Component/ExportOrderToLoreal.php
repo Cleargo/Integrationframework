@@ -353,6 +353,7 @@ class ExportOrderToLoreal
             "UD" => "3P",
             "AC" => "3Q",
             "R&G" => "3F",
+            "NYXPMU" => "17",
         ];
         return $map[$brand_code];
     }
