@@ -17,7 +17,7 @@ use Magento\Framework\App\Response\Http\FileFactory;
 use Magento\Framework\Controller\Result\RawFactory;
 use Cleargo\PurchaseQuota\Helper\Data as PurchaseQuotaHelper;
 
-class ExportOrderToLoreal
+class ExportOrderToLorealToLoreal
 {
     protected $logger;
 
@@ -104,7 +104,7 @@ class ExportOrderToLoreal
         $this->orderCollection = $this->getOrderCollection($orderStatus, $this->storeId);
 
         if (!$this->orderCollection->count()) {
-            $this->logger->info("ExportOrder: There are no Order for export");
+            $this->logger->info("ExportOrderToLoreal: There are no Order for export");
             return;
         } else {
             // Create directory on local server
@@ -116,7 +116,7 @@ class ExportOrderToLoreal
                     $this->logger->info('Fail to create directory on local server: ' . $outputDir);
                 }
             }
-            $this->logger->info("ExportOrder: " . $this->orderCollection->count() . " order(s) processed");
+            $this->logger->info("ExportOrderToLoreal: " . $this->orderCollection->count() . " order(s) processed");
         }
         try {
             // Export Order Xml
@@ -207,6 +207,7 @@ class ExportOrderToLoreal
                 $currentTime = time();
                 $order->setNavLastSyncAt(date("Y-m-d H:i:s", $currentTime));
                 $order->getResource()->saveAttribute($order, 'nav_last_sync_at');
+                $this->logger->info("ExportOrderToLoreal: order with increment id " . $order->getIncrementId() . " processed");
             }
         } catch (\Exception $e) {
             $this->logger->debug($e->getMessage());
@@ -259,7 +260,7 @@ class ExportOrderToLoreal
             fputcsv($outputFile, $header, "|");
         fputcsv($outputFile, $row, "|");
         fclose($outputFile);
-        $this->logger->info("ExportOrder: " . $fileName . " created");
+        $this->logger->info("ExportOrderToLoreal: " . $fileName . " created");
     }
 
     public function setRelationParams($params) {
