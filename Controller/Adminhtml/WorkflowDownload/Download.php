@@ -98,16 +98,16 @@ class Download extends \Magento\Backend\App\Action
         }
     }
 
-    protected function getOrderCollection($orderStatus = null, $store_id = null) {
+    protected function getOrderCollection($store_id = null, $orderStatus = null) {
         $orderModel = $this->orderFactory->create();
         $orderCollection = $orderModel->getCollection();
         $data = $orderCollection;
-        if ($orderStatus !== ""){
-            $data->addFieldToFilter('status', ['in' => $orderStatus]);
+        if ($orderStatus != ""){
+            $data->addFieldToFilter('status', ['in' => [$orderStatus]]);
         } else{
             $data->addFieldToFilter('status', ['in' => ['processing', 'complete']]);
         }
-        if ($store_id !== ""){
+        if ($store_id != ""){
             if ($store_id == 1)
                 $store_ids = $this->purchaseQuotaHelper->getWebsiteStoreIds('sp');
             else
@@ -357,6 +357,7 @@ class Download extends \Magento\Backend\App\Action
             "UD" => "3P",
             "AC" => "3Q",
             "R&G" => "3F",
+            "NYXPMU" => "17",
         ];
         return $map[$brand_code];
     }

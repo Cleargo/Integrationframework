@@ -41,7 +41,7 @@ $config_value = $block->getStartEndDate();
             <button class="action scalable primary" type="submit"><?php echo __('Download'); ?></button>
         </form>
     </div>
-    <div class="row" style="margin-bottom: 10px;">
+    <!--div class="row" style="margin-bottom: 10px;">
         <h2><?php echo __('Order export in TXT'); ?></h2>
         <div class="start-date">Start Date: <?php echo $config_value['start_date']; ?></div>
         <div class="end-date">End Date: <?php echo $config_value['end_date']; ?></div>
@@ -61,7 +61,7 @@ $config_value = $block->getStartEndDate();
         </div>
     <?php endforeach; ?>
     <!--All in one-->
-    <div class="row" style="margin-bottom: 10px;">
+    <!--div class="row" style="margin-bottom: 10px;">
         <h3 class="title-store" style="margin-bottom: 10px;"><?php echo __('Download all orders'); ?></h3>
         <form class="form form-download-csv" method="post" action="<?php echo $block->getDownloadLink(); ?>">
             <?php echo $this->getBlockHtml('formkey'); ?>
@@ -70,5 +70,5 @@ $config_value = $block->getStartEndDate();
             <input name="type" value="all" type="hidden">
             <button class="action scalable primary" type="submit"><?php echo __('Download'); ?></button>
         </form>
-    </div>
+    </div-->
 </div>

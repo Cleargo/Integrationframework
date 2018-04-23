@@ -17,7 +17,7 @@ use Magento\Framework\App\Response\Http\FileFactory;
 use Magento\Framework\Controller\Result\RawFactory;
 use Cleargo\PurchaseQuota\Helper\Data as PurchaseQuotaHelper;
 
-class ExportOrderToLorealToLoreal
+class ExportOrderToLoreal
 {
     protected $logger;
 
@@ -202,7 +202,7 @@ class ExportOrderToLorealToLoreal
                         "", //GLN
                         "", //EDISupp
                     ];
-                    $this->outputFiles($csv_header, $csv_row, $outputDir, $staff_no, $order_date);
+                    $this->outputFiles($csv_header, $csv_row, $outputDir, $staff_no, $order_date, $brand_code);
                 }
                 $currentTime = time();
                 $order->setNavLastSyncAt(date("Y-m-d H:i:s", $currentTime));
@@ -219,7 +219,7 @@ class ExportOrderToLorealToLoreal
         $orderModel = $this->orderFactory->create();
         $orderCollection = $orderModel->getCollection();
         $data = $orderCollection;
-        if ($orderStatus !== ""){
+        if ($orderStatus != ""){
             $data->addFieldToFilter('status', ['in' => $orderStatus]);
         } else{
             //No classification on order status for SAP
@@ -237,7 +237,7 @@ class ExportOrderToLorealToLoreal
         return $data;
     }
 
-    protected function outputFiles($header, $row, $outputDir, $customer_id, $order_date){
+    protected function outputFiles($header, $row, $outputDir, $customer_id, $order_date, $brand){
         //Output file
         //Store
         $store_label = $this->isFgStore($this->storeId) ? "FG" : "SP";
@@ -249,7 +249,7 @@ class ExportOrderToLorealToLoreal
         //Timestamp
         $fileTime = $order_date . "_";
         //Final Filename
-        $fileName = $fileTime . $customer_text . $store_label . '.dat';
+        $fileName = $fileTime . $customer_text . $brand . "_" . $store_label .'.dat';
         // Generate DAT for each order
         $need_header = TRUE;
         if (file_exists($outputDir . $fileName)){
