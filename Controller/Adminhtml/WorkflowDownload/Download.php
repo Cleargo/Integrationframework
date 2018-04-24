@@ -123,153 +123,73 @@ class Download extends \Magento\Backend\App\Action
             return;
         } else {
             $csv_output = "";
-            if ($type == 'csv') {
-                // Export Order CSV
-                $csv_header = [
-                    "Sales Period",
-                    "Order Date",
-                    "Order Type",
-                    "Order Status",
-                    "Entity Code",
-                    "Staff No",
-                    "Staff Name",
-                    "Item Code",
-                    "Brand",
-                    "Brand Name",
-                    "Division",
-                    "Category",
-                    "Unit Price",
-                    "Order Qty",
-                    "Provision Qty",
-                    "Received Qty",
-                    "Description"
+            // Export Order CSV
+            $csv_header = [
+                "Sales Period",
+                "Order Date",
+                "Order Type",
+                "Order Status",
+                "Entity Code",
+                "Staff No",
+                "Staff Name",
+                //"Email",
+                "Item Code",
+                "Brand",
+                "Brand Name",
+                "Division",
+                "Category",
+                "Unit Price",
+                "Order Qty",
+                "Provision Qty",
+                "Received Qty",
+                "Description"
+            ];
+            $csv_output .= $this->outputCSV($csv_header);
+            foreach ($orderCollection as $order) {
+                $customer_id = $order->getCustomerId();
+                //Customer
+                $loreal_entity_id = '';
+                $staff_no = '';
+                $name = '';
+                if ($customer_id != '') {
+                    $customer = $this->customer->getById($customer_id);
+                    if ($customer->getCustomAttribute('loreal_entity_id'))
+                        $loreal_entity_id = $customer->getCustomAttribute('loreal_entity_id')->getValue();//Entity Code
+                    if ($customer->getCustomAttribute('staff_no'))
+                        $staff_no = $customer->getCustomAttribute('staff_no')->getValue();//Staff No
+                    $name = $customer->getFirstname() . " " . $customer->getLastname();//Staff Name
+                }
+                //Ordered Items
+                $products = $order->getAllItems();
+                $csv_order = [
+                    $this->scopeConfig->getValue('product/event/latest_event_name'),//Sales Period
+                    date("d-m-Y", strtotime($order->getCreatedAt())),//Order Date
+                    $this->isFgStore($order->getStoreId()) ? "Free Good" : "Staff Purchase",//Order Type
+                    $order->getStatus(),//Order Status
+                    $loreal_entity_id,//Entity Code
+                    $staff_no,//Staff No
+                    $name,//Staff Name
+                    //$customer->getEmail()//Email
                 ];
-                $csv_output .= $this->outputCSV($csv_header);
-                foreach ($orderCollection as $order) {
-                    $customer_id = $order->getCustomerId();
-                    //Customer
-                    $loreal_entity_id = '';
-                    $staff_no = '';
-                    $name = '';
-                    if ($customer_id != '') {
-                        $customer = $this->customer->getById($customer_id);
-                        if ($customer->getCustomAttribute('loreal_entity_id'))
-                            $loreal_entity_id = $customer->getCustomAttribute('loreal_entity_id')->getValue();//Entity Code
-                        if ($customer->getCustomAttribute('staff_no'))
-                            $staff_no = $customer->getCustomAttribute('staff_no')->getValue();//Staff No
-                        $name = $customer->getFirstname() . " " . $customer->getLastname();//Staff Name
-                    }
-                    //Ordered Items
-                    $products = $order->getAllItems();
-                    $csv_order = [
-                        $this->scopeConfig->getValue('product/event/latest_event_name'),//Sales Period
-                        date("d-m-Y", strtotime($order->getCreatedAt())),//Order Date
-                        $this->isFgStore($order->getStoreId()) ? "Free Good" : "Staff Purchase",//Order Type
-                        $order->getStatus(),//Order Status
-                        $loreal_entity_id,
-                        $staff_no,
-                        $name
+                foreach ($products as $product) {
+                    //Get Product
+                    $product_factory = $this->product->create()->load($product->getProductId());
+                    $price = $this->isFgStore($order->getStoreId()) ? 0 : $product->getPrice() - $product->getDiscountAmount();
+                    $csv_order_item = [
+                        $this->trimSku($product->getSku()),//Item Code
+                        $this->getSelectOptionText($product_factory, 'brand_name'),//Brand Name
+                        $this->getSelectOptionText($product_factory, 'brand'),//Brand
+                        $this->getSelectOptionText($product_factory, 'division'),//Division
+                        $this->getProductCategory($product_factory),//Category
+                        $price,//Unit Price
+                        (int)$product->getQtyOrdered(),//Order Qty
+                        (int)$product->getQtyInvoiced(),//Provision Qty
+                        (int)$product->getQtyShipped(),//Received Qty
+                        $product->getName()//Description
                     ];
-                    foreach ($products as $product) {
-                        //Get Product
-                        $product_factory = $this->product->create()->load($product->getProductId());
-                        $csv_order_item = [
-                            $this->trimSku($product->getSku()),//Item Code
-                            $this->getSelectOptionText($product_factory, 'brand_name'),//Brand Name
-                            $this->getSelectOptionText($product_factory, 'brand'),//Brand
-                            $this->getSelectOptionText($product_factory, 'division'),//Division
-                            $this->getProductCategory($product_factory),//Category
-                            (int)$product->getPrice(),//Unit Price
-                            (int)$product->getQtyOrdered(),//Order Qty
-                            (int)$product->getQtyInvoiced(),//Provision Qty
-                            (int)$product->getQtyShipped(),//Received Qty
-                            $product->getName()//Description
-                        ];
-                        $csv_record = array_merge($csv_order, $csv_order_item);
-                        $csv_output .= $this->outputCSV($csv_record);
-                    }
+                    $csv_record = array_merge($csv_order, $csv_order_item);
+                    $csv_output .= $this->outputCSV($csv_record);
                 }
-            } else {
-                // Export Order TXT
-                $csv_header[] = [
-                    "",
-                    "Div",
-                    "Type",
-                    "Reason",
-                    "WHType",
-                    "PORef",
-                    "OrdDate",
-                    "DelDate",
-                    "InvDate",
-                    "SoldTo",
-                    "ShipTo",
-                    "MSICust",
-                    "Remark",
-                    "Material",
-                    "MSIMaterial",
-                    "OrderQty",
-                    "FreeQty",
-                    "Price",
-                    "GLN",
-                    "EDISupp"
-                ];
-                $csv_record = $csv_header;
-                $row = [];
-                foreach ($orderCollection as $order) {
-                    $products = $order->getAllItems();
-                    foreach ($products as $product) {
-                        //Get Product
-                        $product_factory = $this->product->create()->load($product->getProductId());
-                        //Map brand_code with sap_division_code
-                        $brand_code = $this->getSelectOptionText($product_factory, 'brand_name');
-                        $sap_division_code = $this->mapBrandCodeSapDivisionCode($brand_code);
-                        //See if free goods checkout or staff purchase checkout
-                        $type = $this->isFgStore($order->getStoreId()) ? "YFD" : "YOR";
-                        //See if free goods checkout or staff purchase checkout
-                        $wh_type = $this->isFgStore($order->getStoreId()) ? "LSFG" : "LSPO";
-                        //Staff code
-                        //Get Customer id
-                        $customer_id = $order->getCustomerId();
-                        $staff_no = '';
-                        if ($customer_id != '') {
-                            $customer = $this->customer->getById($customer_id);
-                            if ($customer->getCustomAttribute('staff_no'))
-                                $staff_no = $customer->getCustomAttribute('staff_no')->getValue();
-                        }
-                        //Order Date
-                        $order_date = $this->formatDateTxt($order->getCreatedAt());
-                        //Delivery Date
-                        $delivery_date = $this->scopeConfig->getValue("product/event/latest_event_delivery_date");
-                        $delivery_date = $this->formatDateTxt($delivery_date);
-                        //Sold To, Free Goods TBC
-                        $sold_to = $this->isFgStore($order->getStoreId()) ? $this->scopeConfig->getValue("product/event/fg_soldto_code") : $this->scopeConfig->getValue("product/event/sp_soldto_code");
-                        $row[] = [
-                            "", //Empty separator
-                            $sap_division_code, //sap_division_code
-                            $type, //type
-                            "H00", //Reason
-                            $wh_type, //WHType
-                            $staff_no, //PORef
-                            $order_date, //OrdDate
-                            $delivery_date, //DelDate
-                            $delivery_date, //InvDate
-                            $sold_to, //SoldTo
-                            $staff_no, //ShipTo
-                            "NA", //MSICust
-                            "", //Remark
-                            $this->trimSku($product->getSku()), //Material
-                            "X", //MSIMaterial
-                            (int)$product->getQtyOrdered(), //OrderQty
-                            "0", //FreeQty
-                            (int)$product->getPrice(), //Price
-                            "", //GLN
-                            "", //EDISupp
-                        ];
-                        $csv_record = array_merge($csv_record, $row);
-                    }
-                }
-                foreach ($csv_record as $line)
-                    $csv_output .= $this->outputCSV($line, $type) . "\r\n";
             }
             return $csv_output;
         }
