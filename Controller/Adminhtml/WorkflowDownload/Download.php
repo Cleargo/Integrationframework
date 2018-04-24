@@ -175,6 +175,7 @@ class Download extends \Magento\Backend\App\Action
                     //Get Product
                     $product_factory = $this->product->create()->load($product->getProductId());
                     $price = $this->isFgStore($order->getStoreId()) ? 0 : $product->getPrice() - $product->getDiscountAmount();
+                    $picked_qty = $product->getQtyOrdered() - $product->getQtyRefunded();
                     $csv_order_item = [
                         $this->trimSku($product->getSku()),//Item Code
                         $this->getSelectOptionText($product_factory, 'brand_name'),//Brand Name
@@ -183,8 +184,8 @@ class Download extends \Magento\Backend\App\Action
                         $this->getProductCategory($product_factory),//Category
                         $price,//Unit Price
                         (int)$product->getQtyOrdered(),//Order Qty
-                        (int)$product->getQtyInvoiced(),//Provision Qty
-                        (int)$product->getQtyShipped(),//Received Qty
+                        (int)$picked_qty,//Provision Qty
+                        (int)$picked_qty,//Received Qty
                         $product->getName()//Description
                     ];
                     $csv_record = array_merge($csv_order, $csv_order_item);
