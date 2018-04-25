@@ -132,7 +132,7 @@ class Download extends \Magento\Backend\App\Action
                 "Entity Code",
                 "Staff No",
                 "Staff Name",
-                //"Email",
+                "Email",
                 "Item Code",
                 "Brand",
                 "Brand Name",
@@ -169,7 +169,7 @@ class Download extends \Magento\Backend\App\Action
                     $loreal_entity_id,//Entity Code
                     $staff_no,//Staff No
                     $name,//Staff Name
-                    //$customer->getEmail()//Email
+                    $customer->getEmail()//Email
                 ];
                 foreach ($products as $product) {
                     //Get Product
