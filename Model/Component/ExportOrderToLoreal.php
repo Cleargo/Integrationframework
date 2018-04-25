@@ -16,6 +16,7 @@ use Magento\Catalog\Api\CategoryRepositoryInterface;
 use Magento\Framework\App\Response\Http\FileFactory;
 use Magento\Framework\Controller\Result\RawFactory;
 use Cleargo\PurchaseQuota\Helper\Data as PurchaseQuotaHelper;
+use Cleargo\Integrationframeworks\Helper\Data as IFHelper;
 
 class ExportOrderToLoreal
 {
@@ -56,6 +57,8 @@ class ExportOrderToLoreal
     protected $rawFactory;
 
     protected $purchaseQuotaHelper;
+    
+    protected $if_helper;
 
     public function __construct(
         Logger $logger,
@@ -71,7 +74,8 @@ class ExportOrderToLoreal
         CategoryRepositoryInterface $categoryRepositoryInterface,
         FileFactory $fileFactory,
         RawFactory $resultRawFactory,
-        PurchaseQuotaHelper $PurchaseQuotaHelperData
+        PurchaseQuotaHelper $PurchaseQuotaHelperData,
+        IFHelper $if_helper
     )
     {
         $this->logger = $logger;
@@ -88,6 +92,7 @@ class ExportOrderToLoreal
         $this->fileFactory = $fileFactory;
         $this->rawFactory = $resultRawFactory;
         $this->purchaseQuotaHelper = $PurchaseQuotaHelperData;
+        $this->if_helper = $if_helper;
     }
 
     public function execute() {
@@ -149,7 +154,7 @@ class ExportOrderToLoreal
                     $product_factory = $this->product->create()->load($product->getProductId());
                     //Map brand_code with sap_division_code
                     $brand_code = $this->getSelectOptionText($product_factory, 'brand_name');
-                    $sap_division_code = $this->mapBrandCodeSapDivisionCode($brand_code);
+                    $sap_division_code = $this->if_helper->mapBrandCodeSapDivisionCode($brand_code);
                     //See if free goods checkout or staff purchase checkout
                     $type = $this->isFgStore($order->getStoreId()) ? "YFD" : "YOR";
                     //Resaon
@@ -307,56 +312,6 @@ class ExportOrderToLoreal
                 return $cat_name[0];
         }
         return null;
-    }
-
-    protected function mapBrandCodeSapDivisionCode($brand_code){
-        $map = [
-            "" => "",
-            "BIO" => "32",
-            "GAB" => "3A",
-            "GRN" => "17",
-            "HR" => "33",
-            "KIE" => "38",
-            "LRP" => "41",
-            "LAN" => "31",
-            "LOP" => "17",
-            "MTX" => "22",
-            "MBL" => "17",
-            "SHU" => "34",
-            "SKC" => "42",
-            "STL" => "3H",
-            "VIC" => "40",
-            "YSL" => "3E",
-            "ZEG" => "3I",
-            "GAX" => "3A",
-            "GAY" => "3A",
-            "GRX" => "17",
-            "KIX" => "38",
-            "LOZ" => "17",
-            "LOY" => "17",
-            "LOX" => "17",
-            "LOW" => "17",
-            "LOV" => "17",
-            "LPX" => "20",
-            "MBX" => "17",
-            "RLX" => "37",
-            "SLM" => "3H",
-            "LPP" => "20",
-            "HER" => "33",
-            "SUA" => "34",
-            "SKS" => "42",
-            "DSL" => "3B",
-            "KER" => "21",
-            "MMM" => "3K",
-            "VRF" => "3D",
-            "PLY" => "20",
-            "CLA" => "3L",
-            "UD" => "3P",
-            "AC" => "3Q",
-            "R&G" => "3F",
-            "NYXPMU" => "17",
-        ];
-        return $map[$brand_code];
     }
 
     protected function formatDateTxt($date){
