@@ -184,7 +184,7 @@ class ExportOrderToLoreal
                     //Sold To
                     $sold_to = $this->isFgStore($order->getStoreId()) ? $this->scopeConfig->getValue("product/event/fg_soldto_code") : $this->scopeConfig->getValue("product/event/sp_soldto_code");
                     //Price
-                    $price = $this->isFgStore($order->getStoreId()) ? 0 : $product->getPrice() - $product->getDiscountAmount();
+                    $price = $this->isFgStore($order->getStoreId()) ? 0 : $product->getPrice() * $product->getQtyOrdered() - $product->getDiscountAmount();
                     $csv_row = [
                         "", //Empty separator
                         $sap_division_code, //sap_division_code
