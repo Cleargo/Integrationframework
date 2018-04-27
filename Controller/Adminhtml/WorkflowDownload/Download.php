@@ -174,7 +174,7 @@ class Download extends \Magento\Backend\App\Action
                 foreach ($products as $product) {
                     //Get Product
                     $product_factory = $this->product->create()->load($product->getProductId());
-                    $price = $this->isFgStore($order->getStoreId()) ? 0 : $product->getPrice() - $product->getDiscountAmount();
+                    $price = $this->isFgStore($order->getStoreId()) ? 0 : $product->getRowTotal() - $product->getDiscountAmount();
                     $picked_qty = $product->getQtyOrdered() - $product->getQtyRefunded();
                     $csv_order_item = [
                         $this->trimSku($product->getSku()),//Item Code
