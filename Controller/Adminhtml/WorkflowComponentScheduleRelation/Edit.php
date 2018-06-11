@@ -53,7 +53,7 @@ class Edit extends \Cleargo\Integrationframeworks\Controller\Adminhtml\WorkflowC
             $id ? __('Edit Workflowcomponentschedulerelation') : __('New Workflowcomponentschedulerelation')
         );
         $resultPage->getConfig()->getTitle()->prepend(__('Workflowcomponentschedulerelations'));
-        $resultPage->getConfig()->getTitle()->prepend($model->getId() ? $model->getTitle() : __('New Workflowcomponentschedulerelation'));
+        $resultPage->getConfig()->getTitle()->prepend($model->getId() ? $model->getId() : __('New Workflowcomponentschedulerelation'));
         return $resultPage;
     }
 }

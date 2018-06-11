@@ -53,7 +53,7 @@ class Edit extends \Cleargo\Integrationframeworks\Controller\Adminhtml\WorkflowP
             $id ? __('Edit Workflowplans') : __('New Workflowplans')
         );
         $resultPage->getConfig()->getTitle()->prepend(__('Workflowplanss'));
-        $resultPage->getConfig()->getTitle()->prepend($model->getId() ? $model->getTitle() : __('New Workflowplans'));
+        $resultPage->getConfig()->getTitle()->prepend($model->getId() ? $model->getScheduleName() : __('New Workflowplans'));
         return $resultPage;
     }
 }

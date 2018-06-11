@@ -53,7 +53,7 @@ class Edit extends \Cleargo\Integrationframeworks\Controller\Adminhtml\WorkflowC
             $id ? __('Edit Workflowcomponentdefinitionparameters') : __('New Workflowcomponentdefinitionparameters')
         );
         $resultPage->getConfig()->getTitle()->prepend(__('Workflowcomponentdefinitionparameterss'));
-        $resultPage->getConfig()->getTitle()->prepend($model->getId() ? $model->getTitle() : __('New Workflowcomponentdefinitionparameters'));
+        $resultPage->getConfig()->getTitle()->prepend($model->getId() ? $model->getName() : __('New Workflowcomponentdefinitionparameters'));
         return $resultPage;
     }
 }
