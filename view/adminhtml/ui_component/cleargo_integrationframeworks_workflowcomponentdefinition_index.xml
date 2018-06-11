@@ -87,20 +87,6 @@
 				</item>
 			</argument>
 		</column>
-		<column name="component_id">
-			<argument name="data" xsi:type="array">
-				<item name="config" xsi:type="array">
-					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">component_id</item>
-					<item name="editor" xsi:type="array">
-						<item name="editorType" xsi:type="string">text</item>
-						<item name="validation" xsi:type="array">
-							<item name="required-entry" xsi:type="boolean">false</item>
-						</item>
-					</item>
-				</item>
-			</argument>
-		</column>
 		<actionsColumn class="Cleargo\Integrationframeworks\Ui\Component\Listing\Column\WorkflowComponentDefinitionActions" name="actions">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
@@ -112,7 +98,7 @@
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">name</item>
+					<item name="label" translate="true" xsi:type="string">Name</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">text</item>
 						<item name="validation" xsi:type="array">
@@ -125,6 +111,7 @@
 		<column name="type">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
+					<item name="label" translate="true" xsi:type="string">Type</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">text</item>
 						<item name="validation" xsi:type="array">
@@ -137,6 +124,7 @@
 		<column name="description">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
+					<item name="label" translate="true" xsi:type="string">Description</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">text</item>
 						<item name="validation" xsi:type="array">
