@@ -2,7 +2,13 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
 	<preference for="Cleargo\Integrationframeworks\Api\WorkflowScheduleRepositoryInterface" type="Cleargo\Integrationframeworks\Model\WorkflowScheduleRepository"/>
 	<preference for="Cleargo\Integrationframeworks\Api\Data\WorkflowScheduleInterface" type="Cleargo\Integrationframeworks\Model\WorkflowSchedule"/>
+
 	<preference for="Cleargo\Integrationframeworks\Api\Data\WorkflowScheduleSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+	<preference for="Cleargo\Integrationframeworks\Api\Data\WorkflowPlansSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+	<preference for="Cleargo\Integrationframeworks\Api\Data\WorkflowComponentScheduleRelationSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+	<preference for="Cleargo\Integrationframeworks\Api\Data\WorkflowComponentDefinitionSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+	<preference for="Cleargo\Integrationframeworks\Api\Data\WorkflowComponentDefinitionParametersSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+
 	<virtualType name="Cleargo\Integrationframeworks\Model\ResourceModel\WorkflowSchedule\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
 		<arguments>
 			<argument name="mainTable" xsi:type="string">workflow_schedule</argument>
