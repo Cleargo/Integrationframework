@@ -87,11 +87,11 @@
 				</item>
 			</argument>
 		</column>
-		<column name="plan_id">
+		<column name="schedule_id">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">plan_id</item>
+					<item name="label" translate="true" xsi:type="string">Schedule ID</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">text</item>
 						<item name="validation" xsi:type="array">
@@ -112,7 +112,7 @@
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">website_id</item>
+					<item name="label" translate="true" xsi:type="string">Website ID</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">text</item>
 						<item name="validation" xsi:type="array">
@@ -126,7 +126,7 @@
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">store_id</item>
+					<item name="label" translate="true" xsi:type="string">Store ID</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">text</item>
 						<item name="validation" xsi:type="array">
@@ -139,6 +139,7 @@
 		<column name="schedule_name">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
+					<item name="label" translate="true" xsi:type="string">Schedule Name</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">text</item>
 						<item name="validation" xsi:type="array">
@@ -152,7 +153,7 @@
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">start_time</item>
+					<item name="label" translate="true" xsi:type="string">Start Time</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">date</item>
 						<item name="validation" xsi:type="array">
@@ -166,7 +167,7 @@
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">execution_at</item>
+					<item name="label" translate="true" xsi:type="string">Execution At</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">date</item>
 						<item name="validation" xsi:type="array">
@@ -180,7 +181,7 @@
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">end_time</item>
+					<item name="label" translate="true" xsi:type="string">End Time</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">date</item>
 						<item name="validation" xsi:type="array">
@@ -194,7 +195,7 @@
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">status</item>
+					<item name="label" translate="true" xsi:type="string">Status</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">text</item>
 						<item name="validation" xsi:type="array">
@@ -207,6 +208,7 @@
 		<column name="message">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
+					<item name="label" translate="true" xsi:type="string">Message</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">text</item>
 						<item name="validation" xsi:type="array">

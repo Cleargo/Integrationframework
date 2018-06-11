@@ -87,20 +87,6 @@
 				</item>
 			</argument>
 		</column>
-		<column name="component_param_id">
-			<argument name="data" xsi:type="array">
-				<item name="config" xsi:type="array">
-					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">component_param_id</item>
-					<item name="editor" xsi:type="array">
-						<item name="editorType" xsi:type="string">text</item>
-						<item name="validation" xsi:type="array">
-							<item name="required-entry" xsi:type="boolean">false</item>
-						</item>
-					</item>
-				</item>
-			</argument>
-		</column>
 		<actionsColumn class="Cleargo\Integrationframeworks\Ui\Component\Listing\Column\WorkflowComponentDefinitionParametersActions" name="actions">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
@@ -111,6 +97,7 @@
 		<column name="name">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
+					<item name="label" translate="true" xsi:type="string">Name</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">text</item>
 						<item name="validation" xsi:type="array">
@@ -124,7 +111,7 @@
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">type</item>
+					<item name="label" translate="true" xsi:type="string">Type</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">text</item>
 						<item name="validation" xsi:type="array">
@@ -138,7 +125,7 @@
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">required</item>
+					<item name="label" translate="true" xsi:type="string">Required</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">text</item>
 						<item name="validation" xsi:type="array">
@@ -151,6 +138,7 @@
 		<column name="enum_values">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
+					<item name="label" translate="true" xsi:type="string">Enum</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">text</item>
 						<item name="validation" xsi:type="array">

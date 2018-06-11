@@ -87,19 +87,11 @@
 				</item>
 			</argument>
 		</column>
-		<column name="schedule_id">
-			<argument name="data" xsi:type="array">
-				<item name="config" xsi:type="array">
-					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">schedule_id</item>
-				</item>
-			</argument>
-		</column>
 		<column name="enable">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">enable</item>
+					<item name="label" translate="true" xsi:type="string">Enable</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">text</item>
 						<item name="validation" xsi:type="array">
@@ -120,7 +112,7 @@
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">name</item>
+					<item name="label" translate="true" xsi:type="string">Name</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">text</item>
 						<item name="validation" xsi:type="array">
@@ -134,7 +126,7 @@
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">website_id</item>
+					<item name="label" translate="true" xsi:type="string">Website ID</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">text</item>
 						<item name="validation" xsi:type="array">
@@ -148,7 +140,7 @@
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">store_id</item>
+					<item name="label" translate="true" xsi:type="string">Store ID</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">text</item>
 						<item name="validation" xsi:type="array">
@@ -161,6 +153,7 @@
 		<column name="notification_email">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
+					<item name="label" translate="true" xsi:type="string">Notification Email</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">text</item>
 						<item name="validation" xsi:type="array">
@@ -173,6 +166,7 @@
 		<column name="execution_active_from">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
+					<item name="label" translate="true" xsi:type="string">Active From</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">date</item>
 						<item name="validation" xsi:type="array">
@@ -185,6 +179,7 @@
 		<column name="execution_interval">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
+					<item name="label" translate="true" xsi:type="string">Execution Interval</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">text</item>
 						<item name="validation" xsi:type="array">
@@ -198,7 +193,7 @@
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">execution_type</item>
+					<item name="label" translate="true" xsi:type="string">Execution Type</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">text</item>
 						<item name="validation" xsi:type="array">
@@ -212,7 +207,7 @@
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">schedule_type</item>
+					<item name="label" translate="true" xsi:type="string">Schedule Type</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">text</item>
 						<item name="validation" xsi:type="array">
@@ -225,6 +220,7 @@
 		<column name="sort_order">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
+					<item name="label" translate="true" xsi:type="string">Sort Order</item>
 					<item name="editor" xsi:type="array">
 						<item name="editorType" xsi:type="string">text</item>
 						<item name="validation" xsi:type="array">
