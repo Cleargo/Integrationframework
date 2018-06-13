@@ -15,19 +15,29 @@ class ImportPickingResult
     protected $scheduleLogLevel;
 
     protected $importer;
+    
+    protected $directoryList;
 
     public function __construct(
         \Cleargo\Integrationframeworks\Logger\Logger $logger,
+        \Magento\Framework\App\Filesystem\DirectoryList $directoryList,
         \Cleargo\PickingResult\Model\ImportPickingResult $importer
     )
     {
         $this->logger = $logger;
         $this->importer = $importer;
+        $this->directoryList = $directoryList;
     }
     
     public function execute() {
-        $this->importer->setLogger($this->logger);
-        $this->importer->processSavedFiles();
+        //$this->importer->setLogger($this->logger);
+        //$this->importer->processSavedFiles();
+        // the above code will cause transaction lock timeout
+
+        chdir($this->directoryList->getRoot());
+
+        $line = exec('php bin/magento cleargo:import:picking');
+        $this->logger->info($line);
     }
 
     public function setRelationParams($params) {
