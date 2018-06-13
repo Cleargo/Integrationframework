@@ -161,6 +161,7 @@ class RunWorkflow
                 var_dump("RunWorkflow: Workflow plan(id: ". $plan->getId() .") ". $plan->getScheduleName() ." END");
                 $this->logger->info("----------RunWorkflow: Workflow plan(id: ". $plan->getId() .") ". $plan->getScheduleName() ." completed----------");
             } catch (\Exception $e) {
+                $this->logger->critical($e->getMessage());
                 $plan->setStatus('error');
             }
             $plan->save();
