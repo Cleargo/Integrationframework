@@ -140,7 +140,7 @@ class UpgradeData implements UpgradeDataInterface
                 "INSERT INTO `workflow_component_schedule_relation` 
                     (`workflowcomponentschedulerelation_id`, `schedule_id`, `asynchron`, `component_id`, `position`, `parameters`) 
                         VALUES 
-                    (1, 1, 0, 7, 1, '{\"smb_host\":\"10.11.1.144\",\"smb_user\":\"tectura\",\"smb_pw\":\"P@556#78\",\"local_path\":\"/var/nav/import/shipment/\",\"smb_path\":\"Shipment/\",\"smb_share\":\"EShop/\"}');"
+                    (1, 1, 0, 7, 1, '{\"smb_host\":\"10.11.1.144\",\"smb_user\":\"tectura\",\"smb_pw\":\"P@556#78\",\"local_path\":\"/var/www/html/dev/var/nav/import/shipment/\",\"smb_path\":\"Shipment/\",\"smb_share\":\"EShop/\"}');"
             );
             $setup->getConnection()->query(
                 "INSERT INTO `workflow_component_schedule_relation` 
@@ -176,7 +176,7 @@ class UpgradeData implements UpgradeDataInterface
                 "INSERT INTO `workflow_component_schedule_relation` 
                     (`workflowcomponentschedulerelation_id`, `schedule_id`, `asynchron`, `component_id`, `position`, `parameters`) 
                         VALUES 
-                    (6, 3, 0, 8, 2, '{\"smb_host\":\"10.11.1.144\",\"smb_user\":\"tectura\",\"smb_pw\":\"P@556#78\",\"local_path\":\"/var/nav/export/order/\",\"smb_path\":\"Orders/\",\"smb_share\":\"EShop/\"}');"
+                    (6, 3, 0, 8, 2, '{\"smb_host\":\"10.11.1.144\",\"smb_user\":\"tectura\",\"smb_pw\":\"P@556#78\",\"local_path\":\"/var/www/html/dev/var/nav/export/order/\",\"smb_path\":\"Orders/\",\"smb_share\":\"EShop/\"}');"
             );
             $setup->getConnection()->query(
                 "INSERT INTO `workflow_component_schedule_relation` 
@@ -194,7 +194,7 @@ class UpgradeData implements UpgradeDataInterface
                 "INSERT INTO `workflow_component_schedule_relation` 
                     (`workflowcomponentschedulerelation_id`, `schedule_id`, `asynchron`, `component_id`, `position`, `parameters`) 
                         VALUES 
-                    (8, 4, 0, 8, 2, '{\"smb_host\":\"10.11.1.144\",\"smb_user\":\"tectura\",\"smb_pw\":\"P@556#78\",\"local_path\":\"/var/nav/export/creditmemo/\",\"smb_path\":\"Credit Memos/\",\"smb_share\":\"EShop/\"}');"
+                    (8, 4, 0, 8, 2, '{\"smb_host\":\"10.11.1.144\",\"smb_user\":\"tectura\",\"smb_pw\":\"P@556#78\",\"local_path\":\"/var/www/html/dev/var/nav/export/creditmemo/\",\"smb_path\":\"Credit Memos/\",\"smb_share\":\"EShop/\"}');"
             );
 
             $setup->getConnection()->query("INSERT INTO `workflow_plans` (`workflowplans_id`, `schedule_id`, `website_id`, `store_id`, `schedule_name`, `relation_id`, `start_time`, `execution_at`, `end_time`, `status`, `message`) VALUES (1, 3, 1, 1, 'ExportOrder', NULL, '2018-01-16 11:42:30', NULL, NULL, 'completed', NULL);");
