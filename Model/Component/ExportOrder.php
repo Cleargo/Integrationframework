@@ -99,6 +99,20 @@ class ExportOrder
 
             $content = "<response>&#xA;";
             $content .=  $order->toXml([], null, null, false);
+
+            // Todo:: getOrderItem, temp solution unset object data in item and call toXml
+            $items = $order->getAllItems();
+            $content .= "<items>&#xA;";
+            foreach ($items as $item) {
+                foreach ($item->getData() as $label => $value) {
+                    if (is_object($value) || is_array($value)) {
+                        $item->unsetData($label);
+                    }
+                }
+                $content .=  $item->convertToXml([], 'item', null, false);
+            }
+            $content .= "</items>&#xA;";
+
             $content .= "</response>";
             $xml = new \SimpleXMLElement($content);
 
