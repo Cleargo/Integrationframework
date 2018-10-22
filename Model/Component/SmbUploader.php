@@ -26,7 +26,8 @@ class SmbUploader
     private function loadFilesToUpload()
     {
         $return = [];
-        $scanPath = $this->relationParams->local_path;
+        $magentoBasePath = $this->getMagentoBasePath();
+        $scanPath = "{$magentoBasePath}{$this->relationParams->local_path}";
 
         if(!file_exists($scanPath))
             return $return;
