@@ -45,6 +45,19 @@ class UpgradeData implements UpgradeDataInterface
                     VALUES 
                   (4, 1, 'Export Creditmemo', 'For export creditmemo', 1, 1, 'leo@cleargo.com', '2018-01-11 02:58:49', 10, 'MIN', 'INFO', 'RECURRING', 4);"
             );
+            $setup->getConnection()->query(
+                "INSERT INTO `workflow_schedule` 
+                  (`workflowschedule_id`, `enable`, `name`, `description`, `website_id`, `store_id`, `notification_email`, `execution_active_from`, `execution_interval`, `execution_type`, `file_log_level`, `schedule_type`, `sort_order`) 
+                    VALUES 
+                  (5, 1, 'Download Mandrill msg by API', 'For download Mandrill msg by API', 1, 1, 'leo@cleargo.com', '2018-01-10 18:58:49', 5, 'MIN', 'INFO', 'RECURRING', 3);"
+            );
+            $setup->getConnection()->query(
+                "INSERT INTO `workflow_schedule` 
+                  (`workflowschedule_id`, `enable`, `name`, `description`, `website_id`, `store_id`, `notification_email`, `execution_active_from`, `execution_interval`, `execution_type`, `file_log_level`, `schedule_type`, `sort_order`) 
+                    VALUES 
+                  (6, 1, 'Export Mandrill msg to FTP', 'For export Mandrill msg to FTP', 1, 1, 'leo@cleargo.com', '2018-01-10 18:58:49', 5, 'MIN', 'INFO', 'RECURRING', 3);"
+            );
+
 
             $setup->getConnection()->query(
                 "INSERT INTO `workflow_component_definition` 
@@ -94,6 +107,24 @@ class UpgradeData implements UpgradeDataInterface
                     VALUES 
                 (8, 'SmbUploader', 'Custom', 'For uploading file to smb');"
             );
+            $setup->getConnection()->query(
+                "INSERT INTO `workflow_component_definition` 
+                (`workflowcomponentdefinition_id`, `name`, `type`, `description`) 
+                    VALUES 
+                (9, 'DownloadMandrillMsg', 'Custom', 'For download Mandrill api msg');"
+            );
+            $setup->getConnection()->query(
+                "INSERT INTO `workflow_component_definition` 
+                (`workflowcomponentdefinition_id`, `name`, `type`, `description`) 
+                    VALUES 
+                (10, 'ExportMandrillMsg', 'Custom', 'For export Mandrill api msg');"
+            );
+            $setup->getConnection()->query(
+                "INSERT INTO `workflow_component_definition` 
+                (`workflowcomponentdefinition_id`, `name`, `type`, `description`) 
+                    VALUES 
+                (11, 'UploadFileToFTPS', 'Custom', 'For uploading file to FTPS');"
+            );
 
             $setup->getConnection()->query("INSERT INTO `workflow_component_definition_parameters` (`workflowcomponentdefinitionparameters_id`, `component_id`, `name`, `type`, `required`, `enum_values`) VALUES (1, 1, 'ftp_host', 'varchar', 1, NULL);");
             $setup->getConnection()->query("INSERT INTO `workflow_component_definition_parameters` (`workflowcomponentdefinitionparameters_id`, `component_id`, `name`, `type`, `required`, `enum_values`) VALUES (2, 1, 'ftp_user', 'varchar', 1, NULL);");
@@ -129,6 +160,17 @@ class UpgradeData implements UpgradeDataInterface
             $setup->getConnection()->query("INSERT INTO `workflow_component_definition_parameters` (`workflowcomponentdefinitionparameters_id`, `component_id`, `name`, `type`, `required`, `enum_values`) VALUES (32, 8, 'smb_path', 'text', 1, NULL);");
             $setup->getConnection()->query("INSERT INTO `workflow_component_definition_parameters` (`workflowcomponentdefinitionparameters_id`, `component_id`, `name`, `type`, `required`, `enum_values`) VALUES (33, 8, 'local_path', 'text', 1, NULL);");
             $setup->getConnection()->query("INSERT INTO `workflow_component_definition_parameters` (`workflowcomponentdefinitionparameters_id`, `component_id`, `name`, `type`, `required`, `enum_values`) VALUES (34, 8, 'smb_share', 'text', 1, NULL);");
+            $setup->getConnection()->query("INSERT INTO `workflow_component_definition_parameters` (`workflowcomponentdefinitionparameters_id`, `component_id`, `name`, `type`, `required`, `enum_values`) VALUES (35, 9, 'download_status', 'enum', 1, '{\"enumValues\":[\"all\",\"confirmed and paid\"]}');");
+            $setup->getConnection()->query("INSERT INTO `workflow_component_definition_parameters` (`workflowcomponentdefinitionparameters_id`, `component_id`, `name`, `type`, `required`, `enum_values`) VALUES (36, 9, 'destination_path', 'text', 1, NULL);");
+            $setup->getConnection()->query("INSERT INTO `workflow_component_definition_parameters` (`workflowcomponentdefinitionparameters_id`, `component_id`, `name`, `type`, `required`, `enum_values`) VALUES (37, 10, 'export_status', 'enum', 1, '{\"enumValues\":[\"all\",\"confirmed and paid\"]}');");
+            $setup->getConnection()->query("INSERT INTO `workflow_component_definition_parameters` (`workflowcomponentdefinitionparameters_id`, `component_id`, `name`, `type`, `required`, `enum_values`) VALUES (38, 10, 'export_path', 'text', 1, NULL);");
+            $setup->getConnection()->query("INSERT INTO `workflow_component_definition_parameters` (`workflowcomponentdefinitionparameters_id`, `component_id`, `name`, `type`, `required`, `enum_values`) VALUES (39, 11, 'ftp_host', 'varchar', 1, NULL);");
+            $setup->getConnection()->query("INSERT INTO `workflow_component_definition_parameters` (`workflowcomponentdefinitionparameters_id`, `component_id`, `name`, `type`, `required`, `enum_values`) VALUES (40, 11, 'ftp_user', 'varchar', 1, NULL);");
+            $setup->getConnection()->query("INSERT INTO `workflow_component_definition_parameters` (`workflowcomponentdefinitionparameters_id`, `component_id`, `name`, `type`, `required`, `enum_values`) VALUES (41, 11, 'ftp_pw', 'varchar', 1, NULL);");
+            $setup->getConnection()->query("INSERT INTO `workflow_component_definition_parameters` (`workflowcomponentdefinitionparameters_id`, `component_id`, `name`, `type`, `required`, `enum_values`) VALUES (42, 11, 'secure_type', 'enum', 1, '{\'ssl\':\'no-ssl\'}');");
+            $setup->getConnection()->query("INSERT INTO `workflow_component_definition_parameters` (`workflowcomponentdefinitionparameters_id`, `component_id`, `name`, `type`, `required`, `enum_values`) VALUES (43, 11, 'file_pattern', 'text', 1, NULL);");
+            $setup->getConnection()->query("INSERT INTO `workflow_component_definition_parameters` (`workflowcomponentdefinitionparameters_id`, `component_id`, `name`, `type`, `required`, `enum_values`) VALUES (44, 11, 'upload_path', 'text', 1, NULL);");
+            $setup->getConnection()->query("INSERT INTO `workflow_component_definition_parameters` (`workflowcomponentdefinitionparameters_id`, `component_id`, `name`, `type`, `required`, `enum_values`) VALUES (45, 11, 'source_path', 'text', 1, NULL);");
 
 //            $setup->getConnection()->query(
 //"INSERT INTO `workflow_component_schedule_relation`
@@ -140,7 +182,7 @@ class UpgradeData implements UpgradeDataInterface
                 "INSERT INTO `workflow_component_schedule_relation` 
                     (`workflowcomponentschedulerelation_id`, `schedule_id`, `asynchron`, `component_id`, `position`, `parameters`) 
                         VALUES 
-                    (1, 1, 0, 7, 1, '{\"smb_host\":\"10.11.1.144\",\"smb_user\":\"tectura\",\"smb_pw\":\"P@556#78\",\"local_path\":\"/var/nav/import/shipment/\",\"smb_path\":\"Shipment/\",\"smb_history_path\":\"Shipment History/\",\"smb_share\":\"EShop/\"}');"
+                    (1, 1, 0, 7, 1, '{\"smb_host\":\"10.11.1.144\",\"smb_user\":\"tectura\",\"smb_pw\":\"P@556#78\",\"local_path\":\"/var/www/html/dev/var/nav/import/shipment/\",\"smb_path\":\"Shipment/\",\"smb_share\":\"EShop/\"}');"
             );
             $setup->getConnection()->query(
                 "INSERT INTO `workflow_component_schedule_relation` 
@@ -176,7 +218,7 @@ class UpgradeData implements UpgradeDataInterface
                 "INSERT INTO `workflow_component_schedule_relation` 
                     (`workflowcomponentschedulerelation_id`, `schedule_id`, `asynchron`, `component_id`, `position`, `parameters`) 
                         VALUES 
-                    (6, 3, 0, 8, 2, '{\"smb_host\":\"10.11.1.144\",\"smb_user\":\"tectura\",\"smb_pw\":\"P@556#78\",\"local_path\":\"/var/nav/export/order/\",\"smb_path\":\"Orders/\",\"smb_share\":\"EShop/\"}');"
+                    (6, 3, 0, 8, 2, '{\"smb_host\":\"10.11.1.144\",\"smb_user\":\"tectura\",\"smb_pw\":\"P@556#78\",\"local_path\":\"/var/www/html/dev/var/nav/export/order/\",\"smb_path\":\"Orders/\",\"smb_share\":\"EShop/\"}');"
             );
             $setup->getConnection()->query(
                 "INSERT INTO `workflow_component_schedule_relation` 
@@ -194,12 +236,34 @@ class UpgradeData implements UpgradeDataInterface
                 "INSERT INTO `workflow_component_schedule_relation` 
                     (`workflowcomponentschedulerelation_id`, `schedule_id`, `asynchron`, `component_id`, `position`, `parameters`) 
                         VALUES 
-                    (8, 4, 0, 8, 2, '{\"smb_host\":\"10.11.1.144\",\"smb_user\":\"tectura\",\"smb_pw\":\"P@556#78\",\"local_path\":\"/var/nav/export/creditmemo/\",\"smb_path\":\"Credit Memos/\",\"smb_share\":\"EShop/\"}');"
+                    (8, 4, 0, 8, 2, '{\"smb_host\":\"10.11.1.144\",\"smb_user\":\"tectura\",\"smb_pw\":\"P@556#78\",\"local_path\":\"/var/www/html/dev/var/nav/export/creditmemo/\",\"smb_path\":\"Credit Memos/\",\"smb_share\":\"EShop/\"}');"
             );
+
+            $setup->getConnection()->query(
+                "INSERT INTO `workflow_component_schedule_relation` 
+                    (`workflowcomponentschedulerelation_id`, `schedule_id`, `asynchron`, `component_id`, `position`, `parameters`) 
+                        VALUES 
+                    (9, 5, 0, 9, 1, '{\"limit\":\"1000\",\"export_path\":\"/var/msg/export/creditmemo/\"}');"
+            );
+
+            $setup->getConnection()->query(
+                "INSERT INTO `workflow_component_schedule_relation` 
+                    (`workflowcomponentschedulerelation_id`, `schedule_id`, `asynchron`, `component_id`, `position`, `parameters`) 
+                        VALUES 
+                    (10, 6, 0, 10, 1, '{\"order_status\":\"processing\",\"export_path\":\"/var/mandrillmsg/export/\"}');"
+            );
+            $setup->getConnection()->query(
+                "INSERT INTO `workflow_component_schedule_relation`
+                    (`workflowcomponentschedulerelation_id`, `schedule_id`, `asynchron`, `component_id`, `position`, `parameters`)
+                        VALUES
+                    (11, 6, 0, 11, 2, '{\"ftp_host\":\"202.181.236.121\",\"ftp_user\":\"integration\",\"ftp_pw\":\"cleargoisthebest\",\"secure_type\":\"no-ssl\",\"file_pattern\":\"^shipment_[Ymd.xml\",\"upload_path\":\"/k11/dev/magento/export/order/\",\"source_path\":\"/var/nav/export/order/\"}');"
+            );
+
 
             $setup->getConnection()->query("INSERT INTO `workflow_plans` (`workflowplans_id`, `schedule_id`, `website_id`, `store_id`, `schedule_name`, `relation_id`, `start_time`, `execution_at`, `end_time`, `status`, `message`) VALUES (1, 3, 1, 1, 'ExportOrder', NULL, '2018-01-16 11:42:30', NULL, NULL, 'completed', NULL);");
             $setup->getConnection()->query("INSERT INTO `workflow_plans` (`workflowplans_id`, `schedule_id`, `website_id`, `store_id`, `schedule_name`, `relation_id`, `start_time`, `execution_at`, `end_time`, `status`, `message`) VALUES (2, 4, 1, 1, 'ExportCreditmemo', NULL, '2018-01-16 13:04:13', NULL, NULL, 'completed', NULL);");
-            $setup->getConnection()->query("INSERT INTO `workflow_plans` (`workflowplans_id`, `schedule_id`, `website_id`, `store_id`, `schedule_name`, `relation_id`, `start_time`, `execution_at`, `end_time`, `status`, `message`) VALUES (3, 1, 1, 1, 'ImportShipment', NULL, '2018-01-16 21:04:13', NULL, NULL, 'completed', NULL);");
+            $setup->getConnection()->query("INSERT INTO `workflow_plans` (`workflowplans_id`, `schedule_id`, `website_id`, `store_id`, `schedule_name`, `relation_id`, `start_time`, `execution_at`, `end_time`, `status`, `message`) VALUES (3, 5, 1, 1, 'DownloadMandrillMsg', NULL, '2018-01-16 21:04:13', NULL, NULL, 'completed', NULL);");
+            $setup->getConnection()->query("INSERT INTO `workflow_plans` (`workflowplans_id`, `schedule_id`, `website_id`, `store_id`, `schedule_name`, `relation_id`, `start_time`, `execution_at`, `end_time`, `status`, `message`) VALUES (4, 6, 1, 1, 'ExportMandrillMsg', NULL, '2018-01-16 21:04:13', NULL, NULL, 'completed', NULL);");
 
         }
         $setup->endSetup();

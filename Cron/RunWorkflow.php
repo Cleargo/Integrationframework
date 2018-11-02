@@ -136,7 +136,6 @@ class RunWorkflow
                         // TODO: get the component name from relation and load the corresponding model. For example, ExportOrder
                         $compName = $comp['name'];
                         $modelName = "Cleargo\\Integrationframeworks\\Model\\Component\\" . $compName;
-                        //var_dump($modelName);
 
                         // TODO: run execute method in component model, will create interface for component later
                         // TODO: Relation to Component is 1 to 1 ??
@@ -146,7 +145,6 @@ class RunWorkflow
                             ->setStoreId($storeId)
                             ->setScheduleLogLevel($scheduleLogLevel);
                         // Relation to Component is 1 to 1 ???
-
                         $this->logger->info("RunWorkflow: Component(".$compName.") executed");
                         $compModel->execute();
                         //var_dump($comp);
@@ -161,7 +159,9 @@ class RunWorkflow
                 var_dump("RunWorkflow: Workflow plan(id: ". $plan->getId() .") ". $plan->getScheduleName() ." END");
                 $this->logger->info("----------RunWorkflow: Workflow plan(id: ". $plan->getId() .") ". $plan->getScheduleName() ." completed----------");
             } catch (\Exception $e) {
+                //@TODO
                 $plan->setStatus('error');
+                $plan->setMessage(json_encode($e->getMessage()));
             }
             $plan->save();
         }

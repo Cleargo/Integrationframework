@@ -35,13 +35,4 @@ trait BaseComponentTrait
         $this->scheduleLogLevel = $scheduleLogLevel;
         return $this;
     }
-
-    protected function getMagentoBasePath()
-    {
-        return \Magento\Framework\App\ObjectManager
-            ::getInstance()->get(
-                \Magento\Framework\Filesystem\DirectoryList::class
-            )
-            ->getRoot();
-    }
 }

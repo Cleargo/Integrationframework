@@ -40,33 +40,22 @@ class SmbDownloader
     private function download($fileName)
     {
         $this->createLocalDirectoryIfNeed();
-        $magentoBasePath = $this->getMagentoBasePath();
+
         $result = $this->smbShare->get(
             "{$this->relationParams->smb_path}{$fileName}",
-            "{$magentoBasePath}{$this->relationParams->local_path}{$fileName}"
+            "{$this->relationParams->local_path}{$fileName}"
         );
-
-
-        if(isset($this->relationParams->smb_history_path)){
-            $this->smbShare->rename(
-                "{$this->relationParams->smb_path}{$fileName}",
-                "{$this->relationParams->smb_history_path}{$fileName}"
-            );
-        } else {
-            $this->smbShare->del(
-                "{$this->relationParams->smb_path}{$fileName}"
-            );
-        }
+        //del after download , consider move this history folder
+        $this->smbShare->del(
+            "{$this->relationParams->smb_path}{$fileName}"
+        );
     }
 
     private function createLocalDirectoryIfNeed()
     {
-        $magentoBasePath = $this->getMagentoBasePath();
-        $path = "{$magentoBasePath}{$this->relationParams->local_path}";
-
-        if(!file_exists($path)){
+        if(!file_exists($this->relationParams->local_path)){
             mkdir(
-                $path,
+                $this->relationParams->local_path,
                 0777,
                 true
             );
