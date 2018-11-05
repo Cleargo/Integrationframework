@@ -135,8 +135,8 @@ class RunWorkflow
                     foreach ($components as $comp) {
                         // TODO: get the component name from relation and load the corresponding model. For example, ExportOrder
                         $compName = $comp['name'];
-                        $modelName = "Cleargo\\Integrationframeworks\\Model\\Component\\" . $compName;
-
+//                        $modelName = "Cleargo\\Integrationframeworks\\Model\\Component\\" . $compName;
+                        $modelName = $compName;//use full path class name for generate
                         // TODO: run execute method in component model, will create interface for component later
                         // TODO: Relation to Component is 1 to 1 ??
                         $compModel = $this->objectManager->create($modelName)

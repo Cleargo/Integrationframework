@@ -266,6 +266,9 @@ class UpgradeData implements UpgradeDataInterface
             $setup->getConnection()->query("INSERT INTO `workflow_plans` (`workflowplans_id`, `schedule_id`, `website_id`, `store_id`, `schedule_name`, `relation_id`, `start_time`, `execution_at`, `end_time`, `status`, `message`) VALUES (4, 6, 1, 1, 'ExportMandrillMsg', NULL, '2018-01-16 21:04:13', NULL, NULL, 'completed', NULL);");
 
         }
+        if (version_compare($context->getVersion(), "1.0.3", "<")) {
+            $setup->getConnection()->query('update workflow_component_definition set name= concat("Cleargo\\\\Integrationframeworks\\\\Model\\\\Component\\\\",name);');
+        }
         $setup->endSetup();
     }
 }
