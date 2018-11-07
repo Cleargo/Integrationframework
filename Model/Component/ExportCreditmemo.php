@@ -108,7 +108,7 @@ class ExportCreditmemo
                 fwrite($outputFile, $xml->asXML());
                 fclose($outputFile);
                 $creditmemo->setNavLastSyncAt(date("Y-m-d H:i:s", $currentTime));
-                $creditmemo->getResource()->saveAttribute($creditmemo, 'nav_last_sync_at');
+                $creditmemo->getResource()->saveAttribute($creditmemo, 'last_integrated_at');
                 $this->logger->info("ExportCreditmemo: " . $fileName . " created");
                 // Generate xml for each order to archive folder
                 $archiveFile = fopen($archiveDir . $fileName, "w");
@@ -126,7 +126,7 @@ class ExportCreditmemo
         // Use relation params for filter
             $creditmemoCollection = $this->creditmemoModel->getCollection();
             $data = $creditmemoCollection->addFieldToFilter('store_id', $this->storeId)
-                ->addFieldToFilter('nav_last_sync_at', array('null' => true));
+                ->addFieldToFilter('last_integrated_at', array('null' => true));
 
         return $data;
     }

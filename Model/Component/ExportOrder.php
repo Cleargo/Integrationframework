@@ -108,7 +108,7 @@ class ExportOrder
                 fwrite($outputFile, $xml->asXML());
                 fclose($outputFile);
                 $order->setNavLastSyncAt(date("Y-m-d H:i:s", $currentTime));
-                $order->getResource()->saveAttribute($order, 'nav_last_sync_at');
+                $order->getResource()->saveAttribute($order, 'last_integrated_at');
                 $this->logger->info("ExportOrder: " . $fileName . " created");
                 // Generate xml for each order to archive folder
                 $archiveFile = fopen($archiveDir . $fileName, "w");
@@ -125,7 +125,7 @@ class ExportOrder
         $orderModel = $this->orderFactory->create();
         $orderCollection = $orderModel->getCollection();
         $data = $orderCollection->addFieldToFilter('status', $orderStatus)->addFieldToFilter('store_id', $this->storeId)
-            ->addFieldToFilter('nav_last_sync_at', array('null' => true));
+            ->addFieldToFilter('last_integrated_at', array('null' => true));
         return $data;
     }
 
