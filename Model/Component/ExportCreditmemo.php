@@ -119,7 +119,7 @@ class ExportCreditmemo
                 $outputFile = fopen($outputDir . $fileName, "w");
                 fwrite($outputFile, $xml->asXML());
                 fclose($outputFile);
-                $creditmemo->setNavLastSyncAt(date("Y-m-d H:i:s", $currentTime));
+                $creditmemo->setLastIntegratedAt(date("Y-m-d H:i:s", $currentTime));
                 $creditmemo->getResource()->saveAttribute($creditmemo, 'last_integrated_at');
                 $this->logger->info("ExportCreditmemo: " . $fileName . " created");
                 // Generate xml for each order to archive folder

@@ -119,7 +119,7 @@ class ExportOrder
                 $outputFile = fopen($outputDir . $fileName, "w");
                 fwrite($outputFile, $xml->asXML());
                 fclose($outputFile);
-                $order->setNavLastSyncAt(date("Y-m-d H:i:s", $currentTime));
+                $order->setLastIntegratedAt(date("Y-m-d H:i:s", $currentTime));
                 $order->getResource()->saveAttribute($order, 'last_integrated_at');
                 $this->logger->info("ExportOrder: " . $fileName . " created");
                 // Generate xml for each order to archive folder

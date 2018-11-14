@@ -29,10 +29,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup->getConnection()
                 ->addColumn(
                     $setup->getTable($orderTable),
-                    'last_integrated_at',
+                    'nav_last_sync_at',
                     [
                         'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DATETIME,
-                        'comment' =>'last time processed by cleargo integration module'
+                        'comment' =>'Nav Last Sync At'
                     ]
                 );
         }
@@ -44,6 +44,30 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup->getConnection()
                 ->addColumn(
                     $setup->getTable($orderTable),
+                    'nav_last_sync_at',
+                    [
+                        'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DATETIME,
+                        'comment' =>'Nav Last Sync At'
+                    ]
+                );
+        }
+
+
+        if (version_compare($context->getVersion(), "1.0.4", "<")) {
+            $setup->getConnection()
+                ->changeColumn(
+                    $setup->getTable('sales_order'),
+                    'nav_last_sync_at',
+                    'last_integrated_at',
+                    [
+                        'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DATETIME,
+                        'comment' =>'last time processed by cleargo integration module'
+                    ]
+                );
+            $setup->getConnection()
+                ->changeColumn(
+                    $setup->getTable('sales_creditmemo'),
+                    'nav_last_sync_at',
                     'last_integrated_at',
                     [
                         'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DATETIME,
