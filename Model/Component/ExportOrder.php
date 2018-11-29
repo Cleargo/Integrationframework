@@ -64,6 +64,8 @@ class ExportOrder
         $archiveDir = $outputDir . 'archive/';
 
         $this->orderCollection = $this->getOrderCollection($orderStatus);
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $addressRenderer = $objectManager->create('Magento\Sales\Model\Order\Address\Renderer');
 
         if (!$this->orderCollection->count()) {
             $this->logger->info("ExportOrder: There are no Order for export");
@@ -99,6 +101,15 @@ class ExportOrder
 
             $content = "<response>&#xA;";
             $content .=  $order->toXml([], null, null, false);
+
+            $shippingAddress = $order->getShippingAddress();
+            if ($shippingAddress) {
+                $content .= "<address>" . $addressRenderer->format($order->getShippingAddress(), 'oneline') . "</address>&#xA;";
+            }
+            if ($shippingAddress->getTelephone()) {
+                $content .= "<telephone>" . $order->getShippingAddress()->getTelephone() . "</telephone>&#xA;";
+            }
+
             // Todo:: getOrderItem, temp solution unset object data in item and call toXml
             $items = $order->getAllItems();
             $content .= "<items>&#xA;";
