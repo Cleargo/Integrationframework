@@ -152,9 +152,7 @@ class ExportOrderToLoreal
                 foreach ($products as $product) {
                     //Get Product
                     $product_factory = $this->product->create()->load($product->getProductId());
-                    //Map brand_code with sap_division_code
-                    $brand_code = $this->getSelectOptionText($product_factory, 'brand_name');
-                    $sap_division_code = $this->if_helper->mapBrandCodeSapDivisionCode($brand_code);
+                    $sap_division_code = $this->getSelectOptionText($product_factory, 'brand_name');
                     //See if free goods checkout or staff purchase checkout
                     $type = $this->isFgStore($order->getStoreId()) ? "YFD" : "YOR";
                     //Resaon
@@ -207,7 +205,7 @@ class ExportOrderToLoreal
                         "", //GLN
                         "", //EDISupp
                     ];
-                    $this->outputFiles($csv_header, $csv_row, $outputDir, $staff_no, $order_date, $brand_code);
+                    $this->outputFiles($csv_header, $csv_row, $outputDir, $staff_no, $order_date, $sap_division_code);
                 }
                 $currentTime = time();
                 $order->setNavLastSyncAt(date("Y-m-d H:i:s", $currentTime));
