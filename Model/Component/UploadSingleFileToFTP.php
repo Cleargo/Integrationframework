@@ -56,7 +56,7 @@ class UploadSingleFileToFTP extends \Cleargo\Integrationframeworks\Model\Compone
                 $this->setConnection($this->relationParams);
 
                 // Upload file and remove it in magento local
-                    $this->write($upload_path, $source_path);
+                    $this->write($upload_path, \file_get_contents($this->directoryList->getRoot() . $source_path));
                     $this->logger->info("File from local ".$source_path." uploaded to FTP ".$upload_path);
                     // Remove uploaded file on local
 
